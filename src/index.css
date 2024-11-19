@@ -1,0 +1,203 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik');
+@font-face {
+  font-family: 'MyFont';
+  src: local('MyFont'), url(./component/sequel-sans-heavy-display.ttf) format('truetype');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                            'embedded-opentype', and 'svg' */
+}
+
+*{ margin: 0; padding: 0;}
+.NavigationBar{
+  height: 104px;
+  width: 100%;
+  font-family: 'Rubik';
+  font-style: normal;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: #032B91;
+}
+
+.logoimage{
+  vertical-align: middle;
+}
+
+.SystemName{
+  font-family: 'Rubik';
+  font-style: normal;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+  font-size: 20px;
+}
+
+/* Reset some default styles */
+body, html, * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+/* Main Container */
+.SpssContainer {
+  width: 100%;
+  min-height: 100vh;
+  background-color: #ffffff;
+}
+
+/* Navigation Bar */
+.NavigationBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Rubik';
+  padding: 10px 20px;
+  background-color: #032b91; /* Blue background */
+  color: white;
+}
+
+.LogoSection {
+  display: flex;
+  align-items: center;
+}
+
+.LogoImage {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.SystemName p {
+  margin: 0;
+  font-weight: bold;
+}
+
+/* .NavbarButtons button {
+  background: none;
+  border: none;
+  color: white;
+  font-family: 'Rubik';
+  font-weight: 500;
+  font-size: 18px;
+  margin-left: 20px;
+  cursor: pointer;
+} */
+.NavbarButtons {
+  display: flex;
+  gap: 20px; /* Space between buttons */
+}
+
+.AboutUsButton {
+  background: none;
+  color: white;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* .CancelButton {
+  background-color: #FFFFFF;
+  border: 2px solid white;
+  border-radius: 20px;
+  padding: 5px 15px;
+} */
+.CancelButton {
+  background-color: #FFFFFF; /* Blue background */
+  color:  #032B91;
+  border: none;
+  border-radius: 20px; /* Rounded button */
+  padding: 8px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* Main Content */
+.MainContent {
+  display: flex;
+  align-items: center;
+  font-family: 'Rubik';
+  justify-content: space-between;
+  padding: 50px 100px;
+}
+
+.IllustrationSection {
+  flex: 2;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-top: 70px;
+}
+
+.IllustrationImage {
+  width: 600;
+  max-width: 100%;
+}
+
+.LoginForm {
+  flex: 1;
+  max-width: 500px;
+  position: relative;
+  left: -150px; /* Moves the element left */
+}
+
+.LoginHeader {
+  font-size: 30px;
+  font-family: 'MyFont';
+  color: #032b91; /* Dark blue */
+  margin-bottom: 20px;
+}
+
+.FormGroup {
+  margin-bottom: 20px;
+}
+
+.FormGroup label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.FormGroup input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgba(196, 225, 246, 0.5);
+  /*#c4e1f6; Light blue */
+}
+
+.FormOptions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #002f9e;
+}
+
+.ForgotPassword {
+  color: #002f9e;
+  text-decoration: none;
+}
+
+.ForgotPassword:hover {
+  text-decoration: underline;
+}
+
+.LoginButton {
+  width: 100%;
+  background-color: #032b91;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.LoginButton:hover {
+  background-color: #001d6f;
+}
+
