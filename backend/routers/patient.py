@@ -1,23 +1,23 @@
 from fastapi import APIRouter, HTTPException
 from database import conn
-from model import employee
+from model import patient
 
 # Create a router instance
-router = APIRouter(prefix="/employee", tags=["employee"])
+router = APIRouter(prefix="/patient", tags=["patient"])
 
 # Endpoint to fetch all employees
-@router.get("/", response_model=list[employee])
-async def get_all_employees():
+@router.get("/", response_model=list[patient])
+async def get_all_patients():
     try:
         # conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
         # Fetch all employees
-        query = "SELECT * FROM employee"
+        query = "SELECT * FROM patient"
         cursor.execute(query)
-        employees = cursor.fetchall()
+        patients = cursor.fetchall()
 
-        return employees
+        return patients
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -27,21 +27,21 @@ async def get_all_employees():
         # conn.close()
 
 # Endpoint to fetch a single employee by ID
-@router.get("/{employee_id}", response_model=employee)
-async def get_employee_by_id(employee_id: str):
+@router.get("/{pnumber}", response_model=patient)
+async def get_patient_by_id(pnumber: str):
     try:
         # conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
         # Fetch employee by ID
-        query = "SELECT * FROM employee WHERE ID = %s"
-        cursor.execute(query, (employee_id,))
-        employee = cursor.fetchone()
+        query = "SELECT * FROM patient WHERE PNUMBER = %s"
+        cursor.execute(query, (pnumber,))
+        patient = cursor.fetchone()
 
-        if not employee:
+        if not patient:
             raise HTTPException(status_code=404, detail="Employee not found")
 
-        return employee
+        return patient
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -17,3 +17,5 @@ def get_connection() -> connection.MySQLConnection:
         return conn
     except Error as e:
         raise Exception(f"Database connection error: {str(e)}")
+
+conn = get_connection()
