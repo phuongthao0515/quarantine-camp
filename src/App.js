@@ -1,7 +1,9 @@
-import Spss from './Spss'
+import Home from './home'
+import Login from './login'
+import Search from './search_page'
 
 function App() {
-  return <Spss/>;
+  return <Search/>;
 }
 
 export default App;
