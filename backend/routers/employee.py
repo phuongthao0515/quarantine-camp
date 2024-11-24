@@ -9,7 +9,6 @@ router = APIRouter(prefix="/employee", tags=["employee"])
 @router.get("/", response_model=list[employee])
 async def get_all_employees():
     try:
-        # conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
         # Fetch all employees
@@ -30,7 +29,6 @@ async def get_all_employees():
 @router.get("/{employee_id}", response_model=employee)
 async def get_employee_by_id(employee_id: str):
     try:
-        # conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
         # Fetch employee by ID
