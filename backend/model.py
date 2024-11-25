@@ -38,12 +38,12 @@ class patient(BaseModel):
     RISK_LEVEL: risk_level
 
 class Test_Result(BaseModel):
-    Test_ID: int
+    TEST_ID: int
     PNUMBER: str = Field(min_length=8, max_length=8)
-    DATE_TIME: datetime
+    DATE_Time: datetime
     RESPIRATORY_RATE: Decimal = Field(..., ge=0, le=999.99) # equivalent to decimal(5,2)
-    SPO2: float
-    PCR_ct_Value: Decimal = Field(..., ge=0, le=100.99)
-    PCR_ct_result: int
+    SPO2:  Decimal = Field(..., ge=0, le=100.99)
+    PCR_ct_value: Decimal = Field(..., ge=0, le=100.99)
+    PCR_result: int
     QT_ct_value: Decimal = Field(..., ge=0, le=999.99)
-    QT_ct_result: int
+    QT_result: int

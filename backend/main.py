@@ -4,8 +4,21 @@ from routers import employee, patient
 from database import conn, get_connection
 from contextlib import asynccontextmanager
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup event: Initialize the database connection
+    
+    
+    # Yield control back to FastAPI (the app will run as usual)
+    yield
+
+    # Shutdown event: Close the database connection
+    if conn:
+        conn.close()
+        print("Database connection closed.")
+
 # Initialize the FastAPI app
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
 
 # Include the employees router
 app.include_router(employee.router)
@@ -18,21 +31,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup event: Initialize the database connection
-    global conn
-    conn = get_connection()
-    print("Database connection established.")
-    
-    # Yield control back to FastAPI (the app will run as usual)
-    yield
-
-    # Shutdown event: Close the database connection
-    if conn:
-        conn.close()
-        print("Database connection closed.")
 
 @app.get("/")
 async def root():

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from database import conn
 from typing import List
-from model import patient
+from model import patient, Test_Result
 
 # Create a router instance
 router = APIRouter(prefix="/patient", tags=["patient"])
@@ -10,6 +10,7 @@ router = APIRouter(prefix="/patient", tags=["patient"])
 @router.get("/all-patients", response_model=list[patient])
 async def get_all_patients():
     try:
+
         cursor = conn.cursor(dictionary=True)
 
         # Fetch all employees
@@ -115,3 +116,23 @@ async def get_patient_by_name(name: str, limit: int):
     finally:
         cursor.close()
 
+# Return all test for a patient
+@router.get("/test/{pid}", response_model=List[Test_Result])
+async def get_patient_by_name(pid: str):
+    try:
+        cursor = conn.cursor(dictionary=True)
+
+        # Fetch Test Result by PNUMBER
+        query = "SELECT * FROM test_result WHERE PNUMBER = %s "
+        cursor.execute(query, (pid, ))
+        listTest = cursor.fetchall()
+
+        # If no test are found, raise a 404 error
+        if not listTest:
+            raise HTTPException(status_code=404, detail="No Test for this patient")
+
+        return listTest
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()

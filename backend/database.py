@@ -17,15 +17,17 @@ db_config = {
     "password": "Hieu@742004",
     "database": "dbassignment",
 }
-# conn = get_connection()
 conn: Optional[connection.MySQLConnection] = None
 
-# Function to get a database connection
 def get_connection() -> connection.MySQLConnection:
+    global conn
     try:
-        global conn 
-        conn = mysql.connector.connect(**db_config)
+        if conn is None or not conn.is_connected():
+            conn = mysql.connector.connect(**db_config)
         return conn
     except Error as e:
-        raise Exception(f"Database connection error: {str(e)}")
-
+        print(f"Database connection error: {e}")
+        conn = None
+        raise
+conn = get_connection()
+print("Initialize Connection to Database")
