@@ -1,0 +1,57 @@
+
+  /* Main container styles */
+  /* .container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  } */
+  
+  .pageTitle {
+    text-align: center;
+    color: #4b2d9c;
+    margin-bottom: 20px;
+  }
+  
+  .section {
+    margin-top: 30px;
+  }
+  
+  .sectionTitle {
+    color: white;
+    background-color: #6533A6;
+    padding: 10px 15px;
+    border-radius: 5px;
+    display: inline-block;
+    margin-bottom: 15px;
+    font-size: 20px;
+  }
+  
+  /* Table styles */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  .table th,
+  .table td {
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+  }
+  
+  .table th {
+    background-color: #BCACFB;
+    color: #000;
+  }
+  
+  .noData {
+    text-align: center;
+    font-style: italic;
+    color: gray;
+    padding: 20px;
+  }
+  

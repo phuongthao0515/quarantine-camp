@@ -4,8 +4,8 @@
 body{
   display: flex;
   justify-content: center;
+  font-family: 'Rubik';
 }
-
 .container{
   width: 1440px;
 }

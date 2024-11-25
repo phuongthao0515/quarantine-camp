@@ -1,13 +1,15 @@
 import Home from "./home";
 import Login from "./login";
 import Search from "./search_page";
+import AddNewPatient from "./addpatient";
+import TestInfo from "./testinfo";
+import Report from "./Report";
+// import Confirm from "./confirm";
 import { useState, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Protect from "./Protect";
 import Layout from "./Layout";
 function App() {
-  const nav = useNavigate();
-
   const [username, setUserName] = useState("");
 
   const [password, setPassword] = useState("");
@@ -117,11 +119,6 @@ function App() {
 
   const handleLogIn = () => {};
 
-  const handleLogOut = () => {
-    localStorage.removeItem("token");
-    nav("/login");
-  };
-
   return (
     <Routes>
       <Route path="/" element={<Home />} />
@@ -149,10 +146,10 @@ function App() {
             />
           }
         />
-
-        {/* <Route path="/test/:Id" element={< />} />
-      <Route path="/report/:Id" element={< />} />
-      <Route path="/commobidity/:Id" element={< />} /> */}
+        <Route path="/new" element={<AddNewPatient />} />
+        <Route path="/test/:Id" element={<TestInfo />} />
+        <Route path="/report/:Id" element={<Report />} />
+        {/* <Route path="/commobidity/:Id" element={< />} /> */}
       </Route>
     </Routes>
   );

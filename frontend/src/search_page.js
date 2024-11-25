@@ -12,26 +12,6 @@ const PatientInfo = ({ searchReal, searchResult, setSearch }) => {
   return (
     <div className={search.container}>
       <div className={search.patient_info}>
-        {/* Header Section */}
-        <header className={search.header}>
-          <div className={search.logo}>
-            <img src={logo} alt="COVID-19 Camp Logo" />
-          </div>
-          <nav className={search.nav}>
-            <Link to="/" className={search.nav_link}>
-              HOME
-            </Link>
-            <Link to="/" className={search.nav_link}>
-              ABOUT US
-            </Link>
-            <div className={search.user_profile}>
-              <span>PHAN TRONG NHAN</span>
-              <span className={search.role}>ROLE: HEAD</span>
-            </div>
-            <button className={search.logout_button}>LOG OUT</button>
-          </nav>
-        </header>
-
         {/* Main Content Section */}
         <div className={search.main_content}>
           <h1>Patient Information</h1>
@@ -43,7 +23,11 @@ const PatientInfo = ({ searchReal, searchResult, setSearch }) => {
               value={searchReal}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <button className={search.add_patient_button}>+ New Patient</button>
+            <Link to={"/new"} style={{ textDecoration: "none" }}>
+              <button className={search.add_patient_button}>
+                + New Patient
+              </button>
+            </Link>
           </div>
           <table className={search.patient_table}>
             <thead>
@@ -65,17 +49,26 @@ const PatientInfo = ({ searchReal, searchResult, setSearch }) => {
                   <td>{patient.fullname}</td>
                   <td>{patient.PHONE}</td>
                   <td>
-                    <Link to={`/commobidity/${patient.PNUMBER}`}>
+                    <Link
+                      to={`/commobidity/${patient.PNUMBER}`}
+                      style={{ textDecoration: "none" }}
+                    >
                       <button className={search.icon_button}>📋</button>
                     </Link>
                   </td>
                   <td>
-                    <Link to={`/test/${patient.PNUMBER}`}>
+                    <Link
+                      to={`/test/${patient.PNUMBER}`}
+                      style={{ textDecoration: "none" }}
+                    >
                       <button className={search.icon_button}>ℹ️</button>
                     </Link>
                   </td>
                   <td>
-                    <Link to={`/report/${patient.PNUMBER}`}>
+                    <Link
+                      to={`/report/${patient.PNUMBER}`}
+                      style={{ textDecoration: "none" }}
+                    >
                       <button className={search.icon_button}>📄</button>
                     </Link>
                   </td>

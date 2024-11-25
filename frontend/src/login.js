@@ -71,13 +71,16 @@ const LoginPage = ({
                   Forgot your password?
                 </a>
               </div>
-              <button
-                type="submit"
-                className={styles.login_button}
-                onClick={handleLogIn}
-              >
-                LOG IN
-              </button>
+              {/* Temp link, need to get token later */}
+              <Link to="/search">
+                <button
+                  type="submit"
+                  className={styles.login_button}
+                  onClick={handleLogIn}
+                >
+                  LOG IN
+                </button>
+              </Link>
             </form>
           </div>
         </div>

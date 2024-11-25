@@ -4,10 +4,10 @@ from mysql.connector import Error
 
 # Database configuration
 db_config = {
-    "host": "localhost",
-    "user": "root",
-    "password": "Olwen@5547880",
-    "database": "mydb",
+    "host": "127.0.0.1",
+    "user": "PhuongThao",
+    "password": "Thao@123",
+    "database": "ptl",
 }
 
 # Function to get a database connection
