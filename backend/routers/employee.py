@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from database import get_connection
+from database import conn
 from model import employee
 
 # Create a router instance
@@ -9,7 +9,6 @@ router = APIRouter(prefix="/employee", tags=["employee"])
 @router.get("/", response_model=list[employee])
 async def get_all_employees():
     try:
-        conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
         # Fetch all employees
@@ -24,13 +23,12 @@ async def get_all_employees():
 
     finally:
         cursor.close()
-        conn.close()
+        # conn.close()
 
 # Endpoint to fetch a single employee by ID
 @router.get("/{employee_id}", response_model=employee)
 async def get_employee_by_id(employee_id: str):
     try:
-        conn = get_connection()
         cursor = conn.cursor(dictionary=True)
 
         # Fetch employee by ID
@@ -48,4 +46,4 @@ async def get_employee_by_id(employee_id: str):
 
     finally:
         cursor.close()
-        conn.close()
+        # conn.close()

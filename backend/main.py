@@ -1,12 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routers import employee
+from routers import employee, patient
 
 # Initialize the FastAPI app
 app = FastAPI()
 
 # Include the employees router
 app.include_router(employee.router)
+app.include_router(patient.router)
 
 app.add_middleware(
     CORSMiddleware,
