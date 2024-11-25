@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
 from enum import Enum
+from decimal import Decimal
+from datetime import datetime
 
 # Enum for employee type
 class EmployeeType(str, Enum):
@@ -34,3 +36,14 @@ class patient(BaseModel):
     GENDER: gender
     address: str
     RISK_LEVEL: risk_level
+
+class Test_Result(BaseModel):
+    Test_ID: int
+    PNUMBER: str = Field(min_length=8, max_length=8)
+    DATE_TIME: datetime
+    RESPIRATORY_RATE: Decimal = Field(..., ge=0, le=999.99) # equivalent to decimal(5,2)
+    SPO2: float
+    PCR_ct_Value: Decimal = Field(..., ge=0, le=100.99)
+    PCR_ct_result: int
+    QT_ct_value: Decimal = Field(..., ge=0, le=999.99)
+    QT_ct_result: int

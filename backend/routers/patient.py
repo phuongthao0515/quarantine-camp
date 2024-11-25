@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException
 from database import conn
+from typing import List
 from model import patient
 
 # Create a router instance
@@ -49,7 +50,7 @@ async def get_maxpum():
         cursor.close()
         # conn.close()
 
-# Endpoint to fetch a single employee by ID
+# Endpoint to fetch a single employee by ID ?? why employee
 @router.get("/{pnumber}", response_model=patient)
 async def get_patient_by_id(pnumber: str):
     try:
@@ -71,3 +72,46 @@ async def get_patient_by_id(pnumber: str):
     finally:
         cursor.close()
         # conn.close()
+    
+# Find and return the all patient with given name ( name is a string, can be both upper and lower case, doesn't need full name)
+@router.get("/search/{name}", response_model=List[patient])
+async def get_patient_by_name(name: str):
+    try:
+        cursor = conn.cursor(dictionary=True)
+
+        # Fetch patients by FULLNAME
+        query = "SELECT * FROM patient WHERE LOWER(FULLNAME) LIKE LOWER(%s)"
+        cursor.execute(query, (f"%{name}%",))
+        patients = cursor.fetchall()
+
+        # If no patients are found, raise a 404 error
+        if not patients:
+            raise HTTPException(status_code=404, detail="Patient not found!!")
+
+        return patients
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+
+# Find and return a LIMIT number of patient with name
+@router.get("/search/{name}/{limit}", response_model=List[patient])
+async def get_patient_by_name(name: str, limit: int):
+    try:
+        cursor = conn.cursor(dictionary=True)
+
+        # Fetch patients by FULLNAME
+        query = "SELECT * FROM patient WHERE LOWER(FULLNAME) LIKE LOWER(%s) LIMIT %s"
+        cursor.execute(query, (f"%{name}%", limit))
+        patients = cursor.fetchall()
+
+        # If no patients are found, raise a 404 error
+        if not patients:
+            raise HTTPException(status_code=404, detail="Patient not found!!")
+
+        return patients
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+

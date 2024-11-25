@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import employee, patient
+from database import conn, get_connection
+from contextlib import asynccontextmanager
 
 # Initialize the FastAPI app
 app = FastAPI()
@@ -16,6 +18,21 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Startup event: Initialize the database connection
+    global conn
+    conn = get_connection()
+    print("Database connection established.")
+    
+    # Yield control back to FastAPI (the app will run as usual)
+    yield
+
+    # Shutdown event: Close the database connection
+    if conn:
+        conn.close()
+        print("Database connection closed.")
 
 @app.get("/")
 async def root():
