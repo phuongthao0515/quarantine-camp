@@ -12,54 +12,6 @@ body{
     font-family: 'Rubik';
   }
   
-  /* Header Styling */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #f3e8ff;
-    padding: 10px 20px;
-  }
-  
-  .logo {
-    display: flex;
-    align-items: center;
-  }
-  
-  .logo img {
-    height: 30px;
-    margin-right: 10px;
-  }
-  
-  .nav {
-    display: flex;
-    align-items: center;
-    gap: 50px;
-  }
-  
-  .nav_link {
-    text-decoration: none;
-    color: black;
-    font-weight: bold;
-  }
-  
-  .user_profile {
-    display: flex;
-    flex-direction: column;
-    margin-right: 10px;
-    font-size: 0.9em;
-  }
-  
-  .logout_button {
-    background-color: #000;
-    color: #fff;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
   /* Main Content Styling */
   .main_content {
     padding: 20px;

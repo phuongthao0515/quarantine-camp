@@ -1,5 +1,6 @@
 import React from 'react';
 import search from './search_page.module.css';
+import Header from "./header.js";
 import logo from './component/logo covide-19.png';
 
 const PatientInfo = () => {
@@ -7,23 +8,9 @@ const PatientInfo = () => {
     <div className = {search.container}>
     <div className={search.patient_info}>
       {/* Header Section */}
-      <header className={search.header}>
-        <div className={search.logo}>
-          <img src={logo} alt="COVID-19 Camp Logo" />
-        </div>
-        <nav className={search.nav}>
-          <a href="#" className={search.nav_link}>HOME</a>
-          <a href="#" className={search.nav_link}>ABOUT US</a>
-          <a href="#" className={search.nav_link}>SEARCH</a>
-          <div className={search.user_profile}>
-            <span>PHAN TRONG NHAN</span>
-            <span className={search.role}>ROLE: HEAD</span>
-          </div>
-          <button className={search.logout_button}>LOG OUT</button>
-        </nav>
-      </header>
+      <Header logo = {logo}/>
 
-      {/* Main Content Section */}
+      {/*Main Content Section*/}
       <div className={search.main_content}>
         <h1>Patient Information</h1>
         <div className={search.search_section}>
@@ -33,7 +20,8 @@ const PatientInfo = () => {
         <table className={search.patient_table}>
           <thead>
             <tr>
-              <th>PID</th>
+              <th>No</th>
+              <th>PNumber</th>
               <th>Patient Name</th>
               <th>Phone</th>
               <th>Comorbidities</th>
@@ -44,6 +32,7 @@ const PatientInfo = () => {
           <tbody>
             {Array(10).fill(0).map((_, index) => (
               <tr key={index}>
+                <td>{index+1}</td>
                 <td>1000000{index}</td>
                 <td>Nguyen Van A</td>
                 <td>0922 964 718</td>
