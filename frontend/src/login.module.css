@@ -2,9 +2,7 @@ body {
   display: flex;
   justify-content: center;
 }
-.container {
-  width: 1440px;
-}
+
 /* General Page Styling */
 .login_page {
   font-family: "Rubik";
@@ -32,6 +30,7 @@ body {
 .nav {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .nav_link {
@@ -82,7 +81,7 @@ body {
 }
 
 .form_group {
-  width: 230px;
+  min-width: 400px;
   margin-bottom: -25px;
 }
 
@@ -96,25 +95,26 @@ body {
 }
 
 .form_group input {
-  width: 140%;
   padding: 12px;
   border: 1px solid #d4d4d4;
-  border-radius: 8px;
+  border-radius: 5px;
   font-size: 14px;
   color: #4a3f65;
   margin-left: 20px;
   transition: all 0.3s ease;
 }
+
 .form_group input:focus {
   border-color: #6533a6;
   box-shadow: 0px 0px 8px rgba(101, 51, 166, 0.3);
   outline: none;
 }
+
 .form_options {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 90%;
+  width: 100%;
   margin-left: 10px;
   margin-bottom: -30px;
 }
@@ -140,6 +140,10 @@ body {
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
+  width: 360px;
+  padding: 10px 20px;
+  margin-left: 30px;
+  margin-top: -10px;
 }
 
 .login_button:hover {
@@ -153,9 +157,9 @@ body {
   margin-right: 8px;
   cursor: pointer;
 }
-.login_button {
+/* .login_button {
   width: 360px;
   padding: 10px 20px;
   margin-left: 30px;
   margin-top: -10px;
-}
+} */
