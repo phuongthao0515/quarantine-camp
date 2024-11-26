@@ -2,19 +2,63 @@ import React, { useState } from "react";
 import addStyles from "./addpatient.module.css";
 
 const AddPatient = () => {
+  // Predefined options for symptoms and seriousness levels
+  const symptomOptions = [
+    "Fever or chills",
+    "Cough",
+    "Difficulty breathing",
+    "Fatigue",
+    "Muscle or body aches",
+    "Headache",
+    "Loss of taste or smell",
+    "Sore throat",
+    "Congestion or runny nose",
+    "Nausea or vomiting",
+    "Diarrhea",
+  ];
+  const seriousnessOptions = ["1. Mild", "2. Moderate", "3. Severe"];
+
   const [symptoms, setSymptoms] = useState([]);
   const [comorbidities, setComorbidities] = useState([]);
+  const [pcrTestResult, setPcrTestResult] = useState(""); // State to store PCR Test Result
+  const [pcrCtValue, setPcrCtValue] = useState(""); // State to store PCR CT Value
+  const [qtTestResult, setQTTestResult] = useState(""); // State to store PCR Test Result
+  const [qtCtValue, setQTCtValue] = useState("");
 
+  // Add a new symptom row
   const handleAddSymptom = () => {
     setSymptoms([...symptoms, { name: "", startDate: "", seriousness: "" }]);
   };
 
+  // Handle changes for the symptom inputs
+  const handleSymptomChange = (index, field, value) => {
+    const newSymptoms = [...symptoms];
+    newSymptoms[index][field] = value;
+    setSymptoms(newSymptoms);
+  };
+
+  // Toggle the selected comorbidity
   const handleComorbidityClick = (comorbidity) => {
     setComorbidities((prev) =>
       prev.includes(comorbidity)
         ? prev.filter((item) => item !== comorbidity)
         : [...prev, comorbidity]
     );
+  };
+
+  // Handle changes in PCR Test Result selection
+  const handlePcrTestResultChange = (e) => {
+    setPcrTestResult(e.target.value);
+    if (e.target.value === "Negative") {
+      setPcrCtValue(""); // Reset CT value if PCR result is Negative
+    }
+  };
+
+  const handleQTTestResultChange = (e) => {
+    setQTTestResult(e.target.value);
+    if (e.target.value === "Negative") {
+      setQTCtValue(""); // Reset CT value if PCR result is Negative
+    }
   };
 
   return (
@@ -70,10 +114,51 @@ const AddPatient = () => {
           </div>
           <div>
             <label>PCR Test Result</label>
-            <select>
-              <option>Positive</option>
-              <option>Negative</option>
+            <select value={pcrTestResult} onChange={handlePcrTestResultChange}>
+              <option value="">Select PCR Test Result</option>
+              <option value="Positive">Positive</option>
+              <option value="Negative">Negative</option>
             </select>
+          </div>
+          {/* Show PCR CT Value field only if the PCR test result is Positive */}
+          {pcrTestResult === "Positive" && (
+            <div>
+              <label>PCR Test CT Value</label>
+              <input
+                type="text"
+                placeholder="Enter CT Value"
+                value={pcrCtValue}
+                onChange={(e) => setPcrCtValue(e.target.value)}
+              />
+            </div>
+          )}
+
+            <div>
+            <label>Quick Test Result</label>
+            <select value={qtTestResult} onChange={handleQTTestResultChange}>
+              <option value="">Select QT Test Result</option>
+              <option value="Positive">Positive</option>
+              <option value="Negative">Negative</option>
+            </select>
+          </div>
+          {/* Show PCR CT Value field only if the PCR test result is Positive */}
+          {qtTestResult === "Positive" && (
+            <div>
+              <label>QT Test CT Value</label>
+              <input
+                type="text"
+                placeholder="Enter CT Value"
+                value={qtCtValue}
+                onChange={(e) => setQTCtValue(e.target.value)}
+              />
+            </div>
+          )}
+
+
+
+          <div>
+            <label>Respiratory Rate</label>
+            <input type="text" placeholder="Enter Respiratory rate" />
           </div>
           <div>
             <label>SPO2</label>
@@ -96,13 +181,43 @@ const AddPatient = () => {
               {symptoms.map((symptom, index) => (
                 <tr key={index}>
                   <td>
-                    <input type="text" placeholder="Symptom name" />
+                    <select
+                      value={symptom.name}
+                      onChange={(e) =>
+                        handleSymptomChange(index, "name", e.target.value)
+                      }
+                    >
+                      <option value="">Select a symptom</option>
+                      {symptomOptions.map((option, i) => (
+                        <option key={i} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                   <td>
-                    <input type="date" />
+                    <input
+                      type="date"
+                      value={symptom.startDate}
+                      onChange={(e) =>
+                        handleSymptomChange(index, "startDate", e.target.value)
+                      }
+                    />
                   </td>
                   <td>
-                    <input type="text" placeholder="Serious level" />
+                    <select
+                      value={symptom.seriousness}
+                      onChange={(e) =>
+                        handleSymptomChange(index, "seriousness", e.target.value)
+                      }
+                    >
+                      <option value="">Select serious levels</option>
+                      {seriousnessOptions.map((option, i) => (
+                        <option key={i} value={option}>
+                          {option}
+                        </option>
+                      ))}
+                    </select>
                   </td>
                 </tr>
               ))}
@@ -120,33 +235,6 @@ const AddPatient = () => {
         {/* Comorbidities */}
         <section>
           <h2>Comorbidities</h2>
-          {/* <div className={addStyles.comorbidity}>
-                        {[
-                            'Diabetes',
-                            'Heart disease',
-                            'Kidney disease',
-                            'Pregnancy',
-                            'Obesity',
-                            'Chronic lung disease',
-                            'Weakened immune system',
-                            'Stroke',
-                        ].map((comorbidity) => (
-                            <button
-                                type="button"
-                                key={comorbidity}
-                                className={
-                                    comorbidities.includes(comorbidity)
-                                        ? 'active'
-                                        : ''
-                                }
-                                onClick={() =>
-                                    handleComorbidityClick(comorbidity)
-                                }
-                            >
-                                {comorbidity}
-                            </button>
-                        ))}
-                    </div> */}
           <div className={addStyles.comorbidity}>
             {[
               "Diabetes",
