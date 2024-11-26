@@ -5,8 +5,8 @@ const AddPatient = () => {
   const [symptoms, setSymptoms] = useState([]);
   const [comorbidities, setComorbidities] = useState([]);
 
-  const handleAddSymptom = () => {
-    setSymptoms([...symptoms, { name: "", startDate: "", seriousness: "" }]);
+  const handleAddSymptom = (symptom) => {
+    setSymptoms([...symptoms, symptom]);
   };
 
   const handleComorbidityClick = (comorbidity) => {
@@ -15,6 +15,45 @@ const AddPatient = () => {
         ? prev.filter((item) => item !== comorbidity)
         : [...prev, comorbidity]
     );
+  };
+
+  let symptom = {
+    name: "",
+    startDate: "",
+    seriousness: "",
+  };
+
+  const [form, setForm] = useState({
+    fullname: "",
+    PNUMBER: "",
+    PID: "",
+    Gender: "",
+    Risk_level: "",
+    Address: "",
+    Phone: "",
+    symptom: {
+      name: "",
+      startDate: "",
+      seriousness: "",
+    },
+    comorbidity: [],
+    Test: {
+      Id: 1,
+      PCR_Test_Result: 1,
+      SPO2: 2,
+    },
+  });
+
+  useEffect(() => {
+    setForm((form) => ({
+      ...form,
+      symptom: symptoms,
+      comorbidity: comorbidities,
+    }));
+  }, [symptoms, comorbidities]);
+
+  const handleInput = (name, value) => {
+    setForm({ ...form, [name]: value });
   };
 
   return (
@@ -26,26 +65,47 @@ const AddPatient = () => {
           <h2>Basic Information</h2>
           <div>
             <label>Patient Number</label>
-            <input type="text" placeholder="Enter patient number" />
+            <input
+              type="text"
+              placeholder="Enter patient number"
+              value={form.PNUMBER}
+              onChange={(e) => handleInput("PNUMBER", e.target.value)}
+            />
           </div>
           <div>
             <label>Full Name</label>
-            <input type="text" placeholder="Enter full name" />
+            <input
+              type="text"
+              placeholder="Enter full name"
+              value={form.fullname}
+              onChange={(e) => handleInput("fullname", e.target.value)}
+            />
           </div>
           <div>
             <label>PID</label>
-            <input type="text" placeholder="Enter patient ID" />
+            <input
+              type="text"
+              placeholder="Enter patient ID"
+              value={form.PID}
+              onChange={(e) => handleInput("PID", e.target.value)}
+            />
           </div>
           <div>
             <label>Gender</label>
-            <select>
+            <select
+              value={form.Gender}
+              onChange={(e) => handleInput("Gender", e.target.value)}
+            >
               <option>Male</option>
               <option>Female</option>
             </select>
           </div>
           <div>
             <label>Risk Level</label>
-            <select>
+            <select
+              value={form.Risk_level}
+              onChange={(e) => handleInput("Risk_level", e.target.value)}
+            >
               <option>Low</option>
               <option>Medium</option>
               <option>High</option>
@@ -53,11 +113,21 @@ const AddPatient = () => {
           </div>
           <div>
             <label>Address</label>
-            <input type="text" placeholder="Enter address" />
+            <input
+              type="text"
+              placeholder="Enter address"
+              value={form.Address}
+              onChange={(e) => handleInput("Address", e.target.value)}
+            />
           </div>
           <div>
             <label>Phone</label>
-            <input type="text" placeholder="Enter phone number" />
+            <input
+              type="text"
+              placeholder="Enter phone number"
+              value={form.Phone}
+              onChange={(e) => handleInput("Phone", e.target.value)}
+            />
           </div>
         </section>
 
@@ -66,18 +136,33 @@ const AddPatient = () => {
           <h2>Testing Information</h2>
           <div>
             <label>Test ID</label>
-            <input type="text" placeholder="Enter Test ID" />
+            <input
+              type="text"
+              placeholder="Enter Test ID"
+              value={form.test.Id}
+              onChange={(e) => handleInput("test.Id", e.target.value)}
+            />
           </div>
           <div>
             <label>PCR Test Result</label>
-            <select>
+            <select
+              value={form.test.PCR_Test_Result}
+              onChange={(e) =>
+                handleInput("test.PCR_Test_Result", e.target.value)
+              }
+            >
               <option>Positive</option>
               <option>Negative</option>
             </select>
           </div>
           <div>
             <label>SPO2</label>
-            <input type="text" placeholder="Enter SPO2 value" />
+            <input
+              type="text"
+              placeholder="Enter SPO2 value"
+              value={form.test.SPO2}
+              onChange={handleInput("test.SPO2", e.target.value)}
+            />
           </div>
         </section>
 
@@ -96,13 +181,33 @@ const AddPatient = () => {
               {symptoms.map((symptom, index) => (
                 <tr key={index}>
                   <td>
-                    <input type="text" placeholder="Symptom name" />
+                    <input
+                      type="text"
+                      placeholder="Symptom name"
+                      value={form.symptom.name}
+                      onChange={handleInput("symptom.name", e.target.value)}
+                    />
                   </td>
                   <td>
-                    <input type="date" />
+                    <input
+                      type="date"
+                      value={form.symptom.startDate}
+                      onChange={handleInput(
+                        "symptom.startDate",
+                        e.target.value
+                      )}
+                    />
                   </td>
                   <td>
-                    <input type="text" placeholder="Serious level" />
+                    <input
+                      type="text"
+                      placeholder="Serious level"
+                      value={form.symptom.seriousness}
+                      onChange={handleInput(
+                        "symptom.seriousness",
+                        e.target.value
+                      )}
+                    />
                   </td>
                 </tr>
               ))}
@@ -120,33 +225,6 @@ const AddPatient = () => {
         {/* Comorbidities */}
         <section>
           <h2>Comorbidities</h2>
-          {/* <div className={addStyles.comorbidity}>
-                        {[
-                            'Diabetes',
-                            'Heart disease',
-                            'Kidney disease',
-                            'Pregnancy',
-                            'Obesity',
-                            'Chronic lung disease',
-                            'Weakened immune system',
-                            'Stroke',
-                        ].map((comorbidity) => (
-                            <button
-                                type="button"
-                                key={comorbidity}
-                                className={
-                                    comorbidities.includes(comorbidity)
-                                        ? 'active'
-                                        : ''
-                                }
-                                onClick={() =>
-                                    handleComorbidityClick(comorbidity)
-                                }
-                            >
-                                {comorbidity}
-                            </button>
-                        ))}
-                    </div> */}
           <div className={addStyles.comorbidity}>
             {[
               "Diabetes",
