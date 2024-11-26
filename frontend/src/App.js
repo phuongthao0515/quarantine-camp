@@ -134,7 +134,7 @@ function App() {
 
   // No need: searchResult, useEffect when fetch from db
   //  useEffect(() => {
-  //    const fetchPatients = async () => {
+  //    const fetchDAtA = async () => {
   //      try {
   //        const response = await fetch(
   //          `http://localhost:3500/patients${

@@ -11,6 +11,7 @@
   padding: 20px;
   background: white;
   border-radius: 10px;
+  margin-left: 450px;
 
   /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); */
 }
@@ -26,9 +27,9 @@
 
 /* Table Styles */
 .table {
-  width: 100%;
+  width: 50%;
   border-collapse: collapse;
-  margin-top: 10px;
+  margin: 10px;
   text-align: center;
   font-size: 15px;
 }
