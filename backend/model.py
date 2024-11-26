@@ -11,11 +11,16 @@ class EmployeeType(str, Enum):
     manager = "MANAGER"
     doctor = "DOCTOR"
 
-class gender(Enum):
+class gender(str, Enum):
     male = 'M'
     female = 'F'
 
-class risk_level(Enum):
+class risk_level(str, Enum):
+    Low = '1'
+    Mid = '2'
+    High = '3'
+
+class serious_level(str, Enum):
     Low = '1'
     Mid = '2'
     High = '3'
@@ -47,3 +52,12 @@ class Test_Result(BaseModel):
     PCR_result: int
     QT_ct_value: Decimal = Field(..., ge=0, le=999.99)
     QT_result: int
+
+class symptoms(BaseModel):
+    SYMP_NAME: str
+    START_DATE: datetime
+    END_DATE: datetime
+    SERIOUS_LEVEL: serious_level
+
+class comorbidity(BaseModel):
+    COMORBIDITY_NAME: str
