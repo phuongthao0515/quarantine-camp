@@ -178,6 +178,37 @@ const PatientReport = ({ test, setTest, patients }) => {
           </table>
         </section>
 
+
+          {/* Treatment Section */}
+          <section className={styles.section}>
+          <h2 className={styles.sectionTitle}>Treatment</h2>
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Treatment ID</th>
+                <th>Doctor ID</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Result</th>
+                <th>Medicine</th>
+              </tr>
+            </thead>
+            <tbody>
+              {symptoms.map((treatment, index) => (
+                <tr key={index}>
+                  <td>{treatment.treatmentID}</td>
+                  <td>{treatment.startDate}</td>
+                  <td>{treatment.endDate}</td>
+                  <td>{treatment.doctorID}</td>
+                  <td>{treatment.result}</td>
+                  <td>{treatment.medicine}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </section>
+
+
         <Link to={`/search`} style={{ textDecoration: "none" }}>
           <button className={styles.backButton}>BACK TO MAIN</button>
         </Link>
