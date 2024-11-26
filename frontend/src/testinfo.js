@@ -1,11 +1,30 @@
 import React from "react";
 import styles from "./testinfo.module.css";
-import Header from "./header.js";
-import logo from "./component/logo covide-19.png";
+import { Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
+const PatientTestingInfo = ({ test, setTest }) => {
+  const { Id } = useParams();
 
-const PatientTestingInfo = () => {
+  // Fetch test data
+  // useEffect(() => {
+  //   const fetchTestInfo = async () => {
+  //     try {
+  //       const response = await fetch(`/tests?name=${Id}`);
+  //       if (!response.ok) {
+  //         throw new Error("Failed to fetch test information");
+  //       }
+  //       const data = await response.json();
+  //       setTest(data);
+  //     } catch (error) {
+  //       console.error("Error fetching test information:", error);
+  //     }
+  //   };
+
+  //   fetchTestInfo();
+  // }, [Id,setTest]); // Run this effect whenever `pnum` changes
+
   return (
-    <div className={styles.container}>
+    <div className="container">
       <div className={styles.patient_info}>
         {/* Main Section */}
         <main>
@@ -29,19 +48,24 @@ const PatientTestingInfo = () => {
               </thead>
               <tbody>
                 {/* Row with actual data */}
-                <tr>
-                  <td>1000000</td>
-                  <td>00001</td>
-                  <td>Positive</td>
-                  <td>35</td>
-                  <td>18</td>
-                  <td>Positive</td>
-                  <td>40</td>
-                  <td>98%</td>
-                </tr>
+                {test.map((each) => (
+                  <tr>
+                    <td>{each.Test_ID}</td>
+                    <td>{each.PNUM}</td>
+                    <td>{each.Quick_test_result}</td>
+                    <td>{each.Quick_test_ct_value}</td>
+                    <td>{each.Respiratory_rate}</td>
+                    <td>{each.PCR_test_result}</td>
+                    <td>{each.PCR_test_ct_value}</td>
+                    <td>{each.SPO2}%</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
+          <Link to={`/search`} style={{ textDecoration: "none" }}>
+            <button className={styles.backButton}>BACK TO MAIN</button>
+          </Link>
         </main>
       </div>
     </div>

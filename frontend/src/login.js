@@ -56,7 +56,7 @@ const LoginPage = ({
                   id="password"
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(e) => setPassword(e.tartget.value)}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
               <div className={styles.form_options}>

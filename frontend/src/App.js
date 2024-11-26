@@ -7,9 +7,12 @@ import Report from "./Report";
 // import Confirm from "./confirm";
 import { useState, useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
+import Commobidity from "./Commobidity";
 import Protect from "./Protect";
 import Layout from "./Layout";
 function App() {
+  const API_URL = "http://localhost:3500/";
+
   const [username, setUserName] = useState("");
 
   const [password, setPassword] = useState("");
@@ -20,66 +23,100 @@ function App() {
       PNUMBER: 1,
       fullname: "Nguyen Ban A",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 2,
       PNUMBER: 2,
       fullname: "Nguyen Ban B",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 3,
       PNUMBER: 3,
       fullname: "Nguyen Ban C",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 4,
       PNUMBER: 4,
       fullname: "Nguyen D",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 5,
       PNUMBER: 5,
       fullname: "Thi Ba A",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 6,
       PNUMBER: 6,
       fullname: "Thi Ba B",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 7,
       PNUMBER: 7,
       fullname: "Thi Ba C",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 8,
       PNUMBER: 8,
       fullname: "Thi Ba AAA",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 9,
       PNUMBER: 9,
       fullname: "Thi Ba Asdc",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 10,
       PNUMBER: 10,
       fullname: "asddaskdjsan",
       PHONE: 123,
+      gender: "Male",
     },
     {
       id: 11,
       PNUMBER: 11,
       fullname: "Nguyen Ban A",
       PHONE: 123,
+      gender: "Male",
+    },
+  ]);
+
+  const [test, setTest] = useState([
+    {
+      Test_ID: 1,
+      PNUM: 1,
+      Quick_test_result: "Positive",
+      Quick_test_ct_value: 1,
+      PCR_test_result: "Positive",
+      PCR_test_ct_value: 213,
+      Respiratory_rate: 4,
+      SPO2: 45,
+    },
+    {
+      Test_ID: 2,
+      PNUM: 1,
+      Quick_test_result: "Positive",
+      Quick_test_ct_value: 2,
+      PCR_test_result: "Positive",
+      PCR_test_ct_value: 12312,
+      Respiratory_rate: 3,
+      SPO2: 35,
     },
   ]);
 
@@ -100,7 +137,7 @@ function App() {
   //    const fetchPatients = async () => {
   //      try {
   //        const response = await fetch(
-  //          `http://localhost:8000/patients${
+  //          `http://localhost:3500/patients${
   //            searchReal ? `?name=${searchReal}` : "all-patients"
   //          }`
   //        );
@@ -147,9 +184,18 @@ function App() {
           }
         />
         <Route path="/new" element={<AddNewPatient />} />
-        <Route path="/test/:Id" element={<TestInfo />} />
-        <Route path="/report/:Id" element={<Report />} />
-        {/* <Route path="/commobidity/:Id" element={< />} /> */}
+        <Route
+          path="/test/:Id"
+          element={<TestInfo test={test} setTest={setTest} />}
+        />
+        <Route
+          path="/report/:Id"
+          element={<Report test={test} setTest={setTest} patients={patients} />}
+        />
+        <Route
+          path="/commobidity/:Id"
+          element={<Commobidity patients={patients} />}
+        />
       </Route>
     </Routes>
   );

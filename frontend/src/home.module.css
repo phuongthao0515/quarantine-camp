@@ -1,117 +1,117 @@
-body{
+body {
   display: flex;
   justify-content: center;
 }
 
-.container{
+.container {
   width: 1440px;
 }
 
 .homepage {
-    font-family: 'Rubik'; /*Arial, sans-serif;*/
-    background-color: #E8E1F3;
-    font-size: large;
-    height: 100vh;
-    margin: 0;
-  }
-  
-  /* Header Styling */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #C5BAF2;
-    color: #fff;
-  }
-  
-  .logo {
-    font-size: 24px;
-    font-weight: bold;
-  }
-  
-  .nav_link {
-    margin: 0 10px;
-    text-decoration: none;
-    font-family: 'Rubik';
-    font-size: medium;
-    color: #000;
-    font-weight: bold;
-  }
-  
-  .login_button {
-    padding: 5px 15px;
-    background-color: #000;
-    color: #fff;
-    font-family: 'Rubik';
-    font-size: medium;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  /* Main Content Styling */
-  .main_content {
-    display: flex;
-    position: relative;
-    align-items: center;
-    padding: 40px;
-    height: 600px;
-    background-color: #F6F3FC;
-    background-image: url('./component/doctor background.png');
-    color: #000;
-  }
-  
-  .left_content {
-    flex: 1;
-    padding-right: 40px;
-    position: absolute;
-    font-size: x-large;
-    top: 100px;
-    right: 50px; 
-  }
-  
-  .left_content h1 {
-    font-weight: bold;
-  }
-  
-  .right_content {
-    flex: 1;
-  }
-  
-  .main_image {
-    width: 100%;
-    border-radius: 10px;
-    object-fit: cover;
-  }
-  
-  /* Services Section Styling */
-  .services_section {
-    width:400px;
-    position: absolute;
-    padding: 10px 50px 20px;;
-    background-color: #fff;
-    border-radius: 10px;
-    margin: 20px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    top: 55%;
-  }
-  
-  .services_section h2 {
-    color: #4A3F65;
-    font-weight: bold;
-  }
-  
-  .services_section p {
-    font-size: 18px;
-    line-height: 1.6;
-    color: #000;
-  }
-  
-  /* Footer Styling */
-  .footer {
-    text-align: center;
-    padding: 20px;
-    background-color: #E8E1F3;
-    color: #4A3F65;
-  }
+  font-family: "Rubik"; /*Arial, sans-serif;*/
+  background-color: #e8e1f3;
+  font-size: large;
+  height: 100vh;
+  margin: 0;
+}
+
+/* Header Styling */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #c5baf2;
+  color: #fff;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.nav_link {
+  margin: 0 10px;
+  text-decoration: none;
+  font-family: "Rubik";
+  font-size: medium;
+  color: #000;
+  font-weight: bold;
+}
+
+.login_button {
+  padding: 5px 15px;
+  background-color: #000;
+  color: #fff;
+  font-family: "Rubik";
+  font-size: medium;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Main Content Styling */
+.main_content {
+  display: flex;
+  position: relative;
+  align-items: center;
+  padding: 40px;
+  height: 600px;
+  background-color: #f6f3fc;
+  background-image: url("./component/doctor background.png");
+  color: #000;
+}
+
+.left_content {
+  flex: 1;
+  padding-right: 40px;
+  position: absolute;
+  font-size: x-large;
+  top: 100px;
+  right: 50px;
+}
+
+.left_content h1 {
+  font-weight: bold;
+}
+
+.right_content {
+  flex: 1;
+}
+
+.main_image {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+/* Services Section Styling */
+.services_section {
+  width: 400px;
+  position: absolute;
+  padding: 10px 50px 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  margin: 20px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  top: 55%;
+}
+
+.services_section h2 {
+  color: #4a3f65;
+  font-weight: bold;
+}
+
+.services_section p {
+  font-size: 18px;
+  line-height: 1.6;
+  color: #000;
+}
+
+/* Footer Styling */
+.footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #e8e1f3;
+  color: #4a3f65;
+}

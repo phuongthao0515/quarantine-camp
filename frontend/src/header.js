@@ -10,7 +10,7 @@ const Header = ({ logo, handleLogOut }) => {
           <img src={logo} alt="COVID-19 Camp Logo" />
         </div>
         <nav className={styles.nav}>
-          <Link to="/" className={styles.nav_link}>
+          <Link to="/search" className={styles.nav_link}>
             HOME{" "}
           </Link>
           <Link to="/" className={styles.nav_link}>
