@@ -15,34 +15,54 @@ async def insert_patient(new_patient : patient_full_info):
         cursor = conn.cursor(dictionary=True)
          # SQL Insert query to insert patient into the table
         insert_patient = """
-        INSERT INTO patient (PNUMBER, PID, fullname, PHONE, GENDER, ADDRESS, RISK_LEVEL)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        INSERT INTO patient ( PID, fullname, PHONE, GENDER, ADDRESS, RISK_LEVEL)
+        VALUES (%s, %s, %s, %s, %s, %s)
         """
         # Execute the insert with the patient data
-        cursor.execute(insert_patient, (new_patient.PNUMBER, new_patient.PID, new_patient.fullname, 
-                                        new_patient.PHONE, new_patient.GENDER, new_patient.address, new_patient.RISK_LEVEL))
-        
-        if (new_patient.SYMPTOM_NAME != []):
+        cursor.execute(insert_patient, ( new_patient.PID, new_patient.Fullname, 
+                                        new_patient.Phone, new_patient.Gender, new_patient.Address, new_patient.Risk_level))
+        conn.commit()
+        print("Finish Insert patient")
+
+        querry_largest_PNUMBER = """ SELECT LPAD(IFNULL(MAX(CAST(Pnumber AS UNSIGNED)), 0), 8, '0') AS next_pnumber FROM Patient; """
+        cursor.execute(querry_largest_PNUMBER)
+        new_pnum = cursor.fetchone()["next_pnumber"]
+        print(new_pnum)
+
+        if (new_patient.Symptom != []):
             insert_symptoms = """
             INSERT INTO symptoms (PNUM, SYMP_NAME, START_DATE, END_DATE, SERIOUS_LEVEL)
             VALUES (%s, %s, %s, %s, %s)
             """
             # Prepare data as a list of tuples
-            symptoms_data = [(new_patient.PNUMBER, symp_name, start, end, level) for symp_name, start, end, level in 
-                            zip_longest(new_patient.SYMPTOM_NAME, new_patient.SYMPTOM_START_DATE, 
-                                new_patient.SYMPTOM_END_DATE, new_patient.SYMPTOM_SERIOUS_LEVEL, fillvalue=None)]
+            symptoms_data = [(new_pnum, symptom.name, symptom.startDate, symptom.endDate, symptom.seriousness)
+                                for symptom in new_patient.Symptom]
             cursor.executemany(insert_symptoms, symptoms_data)
-        
-        if (new_patient.COMORBIDITY != []):
+        conn.commit()
+        print("Finish Insert symptom")
+        if (new_patient.Comorbidity != []):
             insert_comorbidity = """
             INSERT INTO patient_has_comorbidity (PNUM, COMORBIDITY_NAME)
             VALUES (%s, %s)
             """
             # Prepare data as a list of tuples
-            comorbidity_data = [(new_patient.PNUMBER, comor) for comor in new_patient.COMORBIDITY]
+            comorbidity_data = [(new_pnum, comor) for comor in new_patient.Comorbidity]
             cursor.executemany(insert_comorbidity, comorbidity_data)
+        conn.commit()
+        print("Finish Insert Como")
+        if (new_patient.Test != []):
+            insert_test = """
+            INSERT INTO Test_Result ( PNUMBER, DATE_TIME, RESPIRATORY_RATE, SPO2, PCR_ct_value, PCR_result, QT_ct_value, QT_result)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """
+            # Prepare data as a list of tuples
+            test_data = [ (new_pnum, test.Date_time, test.Respiratory_rate, test.SPO2, 
+                                test.PCR_ct_value, test.PCR_result, test.QT_ct_value, test.QT_result )
+                                    for test in new_patient.Test]
+            cursor.executemany(insert_test, test_data)
         # Commit the transaction to make the change permanent
         conn.commit()
+        print("Finish Insert Test")
 
         # Return the inserted patient data as a response
         return {"message": "Insert successful"}

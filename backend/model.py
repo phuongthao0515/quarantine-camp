@@ -4,7 +4,7 @@ from decimal import Decimal
 from datetime import datetime
 from typing import List, Optional
 
-# Enum for employee type
+######  Enum Class for use  #######
 class EmployeeType(str, Enum):
     staff = "STAFF"
     volunteer = "VOLUNTEER"
@@ -43,11 +43,13 @@ class comorbidity(str, Enum):
     c6 = 'Weakened immune system'
     c7 = 'Pregnancy'
     c8 = 'Stroke'
+
 class serious_level(str , Enum):
     l1 = '1'
     l2 = '2'
     l3 = '3'
 
+####### Class for Querry From DB ##########
 
 # Pydantic model for creating a user
 class employee(BaseModel):
@@ -66,31 +68,47 @@ class patient(BaseModel):
     address: str
     RISK_LEVEL: risk_level
 
-class patient_full_info(BaseModel):
-    PNUMBER: str = Field(min_length=8, max_length=8)
-    PID: str = Field(None, min_length=12, max_length=12) 
-    fullname: str
-    PHONE: str = Field(None, min_length=9, max_length=9)
-    GENDER: gender
-    address: str = None
-    RISK_LEVEL: risk_level = None
-    SYMPTOM_NAME: List[symptom] = []  # default to empty list if not provided
-    SYMPTOM_START_DATE: List[datetime] = []  # Nullable datetime, default empty
-    SYMPTOM_END_DATE: List[Optional[datetime]] = []  # Nullable datetime, default empty
-    SYMPTOM_SERIOUS_LEVEL: List[Optional[serious_level]] = []  # Nullable integer, default empty
-    COMORBIDITY: List[comorbidity] = []  # Nullable comorbidity, default empty
-
-
 class Test_Result(BaseModel):
     TEST_ID: int
     PNUMBER: str = Field(min_length=8, max_length=8)
-    DATE_Time: datetime
+    DATE_TIME: Optional[datetime] = None
     RESPIRATORY_RATE: Decimal = Field(..., ge=0, le=999.99) # equivalent to decimal(5,2)
     SPO2:  Decimal = Field(..., ge=0, le=100.99)
-    PCR_ct_value: Decimal = Field(..., ge=0, le=100.99)
-    PCR_result: int
-    QT_ct_value: Decimal = Field(..., ge=0, le=999.99)
-    QT_result: int
+    PCR_ct_value: Optional[Decimal] = Field(None, ge=0, le=100.99)
+    PCR_result: Optional[bool] = None
+    QT_ct_value: Optional[Decimal] = Field(None, ge=0, le=999.99)
+    QT_result: Optional[bool] =None
+
+########## Special Class for Insert from front end ###########
+
+class symptom_element(BaseModel):
+    name: str
+    startDate: datetime
+    endDate: Optional[datetime] = None
+    seriousness: Optional[serious_level] = None
+
+class Test_Result_B(BaseModel):
+    Date_time: Optional[datetime] = None
+    Respiratory_rate: Decimal = Field(..., ge=0, le=999.99) # equivalent to decimal(5,2)
+    SPO2:  Decimal = Field(..., ge=0, le=100.99)
+    PCR_ct_value: Optional[Decimal] = Field(None, ge=0, le=100.99)
+    PCR_result: Optional[bool] = None
+    QT_ct_value: Optional[Decimal] = Field(None, ge=0, le=999.99)
+    QT_result: Optional[bool] =None
+
+class patient_full_info(BaseModel):
+    Fullname: str  # Required field
+    PID: Optional[str] = Field(None, min_length=12, max_length=12)  
+    Gender: Optional[gender] = None  
+    Risk_level: Optional[risk_level] = None  
+    Address: Optional[str] = None 
+    Phone: Optional[str] = Field(None, min_length=9, max_length=9)  
+    Symptom: List[symptom_element] = Field(default_factory=list)  # Default empty list
+    Comorbidity: List[comorbidity] = Field(default_factory=list)  # Default empty list
+    Test: Optional[List[Test_Result_B]] = None  
+
+
+
 
 class Config:
         # Allow None for any fields that are optional
