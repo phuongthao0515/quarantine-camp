@@ -3,18 +3,10 @@ from mysql.connector import connection
 from mysql.connector import Error
 from typing import Optional
 
-# Database configuration
-# db_config = {
-#     "host": "127.0.0.1",
-#     "user": "PhuongThao",
-#     "password": "Thao@123",
-#     "database": "ptl",
-# }
-
 db_config = {
     "host": "localhost",
-    "user": "Hieu74",
-    "password": "Hieu@742004",
+    "user": "Manager",
+    "password": "Manager123",
     "database": "dbassignment",
 }
 conn: Optional[connection.MySQLConnection] = None

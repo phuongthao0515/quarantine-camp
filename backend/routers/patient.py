@@ -1,10 +1,58 @@
 from fastapi import APIRouter, HTTPException
 from database import conn
 from typing import List
-from model import patient, Test_Result
+from model import patient, Test_Result, patient_full_info
+from itertools import zip_longest
 
 # Create a router instance
 router = APIRouter(prefix="/patient", tags=["patient"])
+
+# Insert an patient
+# "symptom" : [ {}, {}, {} ]
+@router.post("/insert")
+async def insert_patient(new_patient : patient_full_info):
+    try:
+        cursor = conn.cursor(dictionary=True)
+         # SQL Insert query to insert patient into the table
+        insert_patient = """
+        INSERT INTO patient (PNUMBER, PID, fullname, PHONE, GENDER, ADDRESS, RISK_LEVEL)
+        VALUES (%s, %s, %s, %s, %s, %s, %s)
+        """
+        # Execute the insert with the patient data
+        cursor.execute(insert_patient, (new_patient.PNUMBER, new_patient.PID, new_patient.fullname, 
+                                        new_patient.PHONE, new_patient.GENDER, new_patient.address, new_patient.RISK_LEVEL))
+        
+        if (new_patient.SYMPTOM_NAME != []):
+            insert_symptoms = """
+            INSERT INTO symptoms (PNUM, SYMP_NAME, START_DATE, END_DATE, SERIOUS_LEVEL)
+            VALUES (%s, %s, %s, %s, %s)
+            """
+            # Prepare data as a list of tuples
+            symptoms_data = [(new_patient.PNUMBER, symp_name, start, end, level) for symp_name, start, end, level in 
+                            zip_longest(new_patient.SYMPTOM_NAME, new_patient.SYMPTOM_START_DATE, 
+                                new_patient.SYMPTOM_END_DATE, new_patient.SYMPTOM_SERIOUS_LEVEL, fillvalue=None)]
+            cursor.executemany(insert_symptoms, symptoms_data)
+        
+        if (new_patient.COMORBIDITY != []):
+            insert_comorbidity = """
+            INSERT INTO patient_has_comorbidity (PNUM, COMORBIDITY_NAME)
+            VALUES (%s, %s)
+            """
+            # Prepare data as a list of tuples
+            comorbidity_data = [(new_patient.PNUMBER, comor) for comor in new_patient.COMORBIDITY]
+            cursor.executemany(insert_comorbidity, comorbidity_data)
+        # Commit the transaction to make the change permanent
+        conn.commit()
+
+        # Return the inserted patient data as a response
+        return {"message": "Insert successful"}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    finally:
+        cursor.close()
+
 
 # Endpoint to fetch all employees
 @router.get("/all-patients", response_model=list[patient])
