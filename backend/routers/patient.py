@@ -1,8 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from database import conn
 from typing import List
-
-from model import patient, Test_Result, patient_full_info, patient_has_symptom, patient_has_comorbidity
+from collections import defaultdict
+from model import patient, Test_Result, patient_full_info, patient_has_symptom, patient_has_comorbidity, treatment
 from itertools import zip_longest
 
 # Create a router instance
@@ -226,6 +226,55 @@ async def get_comorbidity_by_pnumber(pnum: str):
     finally:
         cursor.close()
 
+@router.get("/treatment/{pnum}")
+async def get_treatment_by_pnumber(pnum: str):
+    try:
+        cursor = conn.cursor(dictionary=True)
+
+        # Fetch treatment by PNUMBER
+        query = """
+            Select t.PNUM, t.TREAT_ID, m.DOCTOR_ID, t.START_DATE, t.END_DATE, t.RESULT, h.MCODE, h.QUANTITY
+            from treatment_record t join make_treatrecord m
+            on t.pnum = %s and t.pnum = m.pnum and t.treat_id = m.treat_id
+            join has_medicine h on t.pnum = h.pnum and t.treat_id = h.treat_id;
+        """
+        cursor.execute(query, (pnum, ))
+        data = cursor.fetchall()
+
+        grouped_data = defaultdict(lambda: defaultdict(lambda: {"doctor_id": set(), "details": []}))
+
+        for record in data:
+            pnum = record["PNUM"]
+            treat_id = record["TREAT_ID"]
+            grouped_data[pnum][treat_id]["start_date"] = record["START_DATE"]
+            grouped_data[pnum][treat_id]["end_date"] = record["END_DATE"]
+            grouped_data[pnum][treat_id]["result"] = record["RESULT"]
+            grouped_data[pnum][treat_id]["doctor_id"].add(record["DOCTOR_ID"])
+            grouped_data[pnum][treat_id]["details"].append({
+                "MCODE": record["MCODE"],
+                "QUANTITY": record["QUANTITY"]
+            })
+
+        output = []
+        for pnum, treatments in grouped_data.items():
+            pnum_data = {"PNUM": pnum, "TREATMENT": []}
+            for treat_id, details in treatments.items():
+                pnum_data["TREATMENT"].append({
+                    "TREAT_ID": treat_id,
+                    "DOCTOR_ID": list(details["doctor_id"]),  # Convert set to list
+                    "START_DATE": details["start_date"],
+                    "END_DATE": details["end_date"],
+                    "RESULT": details["result"],
+                    "MEDICINE": details["details"]
+                })
+            output.append(pnum_data)
+
+        return output
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+
 @router.get("/report/{pnum}")
 async def get_all_patient_report(pnum: str):
     try:
@@ -234,13 +283,15 @@ async def get_all_patient_report(pnum: str):
         list_of_test_results = await get_test_by_pnumber(pnum)  # Fetch test results
         list_of_symptoms = await get_symptom_by_pnumber(pnum)  # Fetch symptoms
         list_of_comorbidities = await get_comorbidity_by_pnumber(pnum)  # Fetch comorbidities
+        list_of_treatment = await get_treatment_by_pnumber(pnum)  # Fetch comorbidities
 
         # Combine all the data into a single report
         report = {
             "patient_info": patient_info,
             "test_results": list_of_test_results,
             "symptoms": list_of_symptoms,
-            "comorbidities": list_of_comorbidities
+            "comorbidities": list_of_comorbidities,
+            "treatment_records" : list_of_treatment
         }
         return report
     except HTTPException as e:
