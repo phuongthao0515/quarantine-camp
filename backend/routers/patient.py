@@ -144,13 +144,12 @@ async def get_test_by_pnumber(pnum: str):
         cursor = conn.cursor(dictionary=True)
 
         # Fetch Test Result by PNUMBER
-        query = "SELECT date_time, respiratory_rate, spo2, QT_ct_value, qt_result, pcr_ct_value, pcr_result FROM test_result WHERE PNUMBER = %s "
+        query = "SELECT TEST_ID, PNUMBER, DATE_TIME, RESPIRATORY_RATE, SPO2, QT_ct_value, Qt_result, PCR_ct_value, PCR_result FROM test_result WHERE PNUMBER = %s "
         cursor.execute(query, (pnum, ))
         listTest = cursor.fetchall()
-
         # If no test are found, raise a 404 error
-        if not listTest:
-            raise HTTPException(status_code=404, detail="No Test for this patient")
+        # if not listTest:
+        #     raise HTTPException(status_code=404, detail="No Test for this patient")
 
         return listTest
     except Exception as e:

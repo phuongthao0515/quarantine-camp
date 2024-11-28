@@ -66,12 +66,12 @@ class employee(BaseModel):
 
 class patient(BaseModel):
     PNUMBER: str = Field(min_length=8, max_length=8)
-    PID: str = Field(min_length=12, max_length=12)
-    fullname: str
-    PHONE: str = Field(min_length=9, max_length=9)
-    GENDER: gender
-    address: str
-    RISK_LEVEL: risk_level
+    PID: Optional[str] = Field(None, min_length=12, max_length=12)
+    fullname: Optional[str] = None
+    PHONE: Optional[str] = Field(None, min_length=9, max_length=9)
+    GENDER: Optional[gender] = None
+    address: Optional[str] = None
+    RISK_LEVEL: Optional[risk_level] = None
 
 class Test_Result(BaseModel):
     TEST_ID: int
