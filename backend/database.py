@@ -3,6 +3,9 @@ from mysql.connector import connection
 from mysql.connector import Error
 from typing import Optional
 
+
+
+# Database configuration
 db_config = {
     "host": "localhost",
     "user": "Manager",

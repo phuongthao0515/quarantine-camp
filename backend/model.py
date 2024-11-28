@@ -21,6 +21,11 @@ class risk_level(str, Enum):
     Mid = '2'
     High = '3'
 
+class serious_level(str, Enum):
+    Low = '1'
+    Mid = '2'
+    High = '3'
+
 class symptom(str, Enum):
     s1 = 'Fever or chills'
     s2 = 'Cough'
