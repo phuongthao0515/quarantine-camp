@@ -10,7 +10,7 @@ db_config = {
     "host": "localhost",
     "user": "Manager",
     "password": "Manager123",
-    "database": "mydb",
+    "database": "dbassignment",
 }
 conn: Optional[connection.MySQLConnection] = None
 
