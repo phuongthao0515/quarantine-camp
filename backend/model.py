@@ -84,6 +84,17 @@ class Test_Result(BaseModel):
     QT_ct_value: Optional[Decimal] = Field(None, ge=0, le=999.99)
     QT_result: Optional[bool] =None
 
+class patient_has_symptom(BaseModel):
+    PNUM: str = Field(min_length=8, max_length=8)
+    SYMP_NAME: symptom
+    START_DATE: datetime 
+    END_DATE: Optional[datetime] = None
+    SERIOUS_LEVEL: Optional[serious_level] = None
+
+class patient_has_comorbidity(BaseModel):
+    PNUM: str = Field(min_length=8, max_length=8)
+    COMORBIDITY_NAME: comorbidity
+
 ########## Special Class for Insert from front end ###########
 
 class symptom_element(BaseModel):

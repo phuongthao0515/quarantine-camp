@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from database import conn
 from typing import List
 
-from model import patient, Test_Result, patient_full_info, symptom, comorbidity
+from model import patient, Test_Result, patient_full_info, patient_has_symptom, patient_has_comorbidity
 from itertools import zip_longest
 
 # Create a router instance
@@ -158,19 +158,19 @@ async def get_test_by_pnumber(pnum: str):
         cursor.close()
 
 # Return all symptom for a patient
-@router.get("/symptom/{pnum}", response_model=List[symptom])
+@router.get("/symptom/{pnum}", response_model=List[patient_has_symptom])
 async def get_symptom_by_pnumber(pnum: str):
     try:
         cursor = conn.cursor(dictionary=True)
 
         # Fetch symptom by PNUMBER
-        query = "SELECT symp_name, start_date, end_date, serious_level FROM symptoms WHERE PNUM = %s "
+        query = "SELECT PNUM, SYMP_NAME, START_DATE, END_DATE, SERIOUS_LEVEL FROM symptoms WHERE PNUM = %s "
         cursor.execute(query, (pnum, ))
         sym = cursor.fetchall()
 
         # If no symptom are found, raise a 404 error
-        if not sym:
-            raise HTTPException(status_code=404, detail="No symptoms for this patient")
+        # if not sym:
+        #     raise HTTPException(status_code=404, detail="No symptoms for this patient")
 
         return sym
     except Exception as e:
@@ -179,19 +179,19 @@ async def get_symptom_by_pnumber(pnum: str):
         cursor.close()
 
 # Return all comorbidity for a patient
-@router.get("/comorbidity/{pnum}", response_model=List[comorbidity])
+@router.get("/comorbidity/{pnum}", response_model=List[patient_has_comorbidity])
 async def get_comorbidity_by_pnumber(pnum: str):
     try:
         cursor = conn.cursor(dictionary=True)
 
         # Fetch comorbidity by PNUMBER
-        query = "SELECT comorbidity_name FROM patient_has_comorbidity WHERE PNUM = %s "
+        query = "SELECT PNUM, COMORBIDITY_NAME FROM patient_has_comorbidity WHERE PNUM = %s "
         cursor.execute(query, (pnum, ))
         comor = cursor.fetchall()
 
         # If no comorbidity are found, raise a 404 error
-        if not comor:
-            raise HTTPException(status_code=404, detail="No symptoms for this patient")
+        # if not comor:
+        #     raise HTTPException(status_code=404, detail="No symptoms for this patient")
 
         return comor
     except Exception as e:
