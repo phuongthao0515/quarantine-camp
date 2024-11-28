@@ -2,24 +2,19 @@ import React from "react";
 import styles from "./report.module.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-const PatientReport = ({
-  test,
-  setTest,
-  patients,
-  API_URL,
-  Comorbidity,
-  setcom,
-}) => {
+const PatientReport = ({ test, setTest, API_URL, Comorbidity, setcom }) => {
   const { Id } = useParams();
 
-  const patient = patients.find((patient) => patient.PNUMBER.toString() === Id);
   const [symptoms, setSymptoms] = useState([]);
+  const [patient, setPatient] = useState({});
+  const [treatments, setTreatment] = useState([]);
   // Fetch report data
   useEffect(() => {
     const fetchReport = async () => {
       try {
-        const response = await fetch(`${API_URL}/report/${Id}`);
+        const response = await fetch(`${API_URL}/patient/report/${Id}`);
         if (!response.ok) {
           throw new Error("Failed to Report information");
         }
@@ -27,14 +22,15 @@ const PatientReport = ({
         setcom(data.comorbidities);
         setSymptoms(data.symptoms);
         setTest(data.test_results);
-        patient = data.patient_info;
+        setPatient(data.patient_info[0]);
+        setTreatment(data.treatment_records[0].TREATMENT);
       } catch (error) {
         console.error("Error fetching Report:", error);
       }
     };
 
     fetchReport();
-  }, [Id]);
+  }, [API_URL, Id, setcom, setTest]);
   return (
     <div className="container">
       <main className={styles.main}>
@@ -50,7 +46,17 @@ const PatientReport = ({
             </div>
             <div>
               <label>Gender</label>
-              <input type="text" value={patient.gender} readOnly />
+              <input
+                type="text"
+                value={
+                  patient.GENDER === "F"
+                    ? "Female"
+                    : patient.GENDER === "M"
+                    ? "Male"
+                    : ""
+                }
+                readOnly
+              />
             </div>
             <div>
               <label>PID</label>
@@ -58,7 +64,7 @@ const PatientReport = ({
             </div>
             <div>
               <label>Risk Level</label>
-              <input type="text" value={patient.riskLevel} readOnly />
+              <input type="text" value={patient.RISK_LEVEL} readOnly />
             </div>
             <div>
               <label>Full Name</label>
@@ -93,13 +99,13 @@ const PatientReport = ({
             </thead>
             <tbody>
               {test.length > 0 ? (
-                test.map((each) => (
-                  <tr>
-                    <td>{each.Test_ID}</td>
+                test.map((each, index) => (
+                  <tr key={index}>
+                    <td>{each.TEST_ID}</td>
                     <td>{each.PNUMBER}</td>
-                    <td>{each.QT_result}</td>
+                    <td>{each.Qt_result}</td>
                     <td>{each.QT_ct_value}</td>
-                    <td>{each.Respiratory_rate}</td>
+                    <td>{each.RESPIRATORY_RATE}</td>
                     <td>{each.PCR_result}</td>
                     <td>{each.PCR_ct_value}</td>
                     <td>{each.SPO2}%</td>
@@ -127,14 +133,20 @@ const PatientReport = ({
               </tr>
             </thead>
             <tbody>
-              {symptoms.map((symptom, index) => (
-                <tr key={index}>
-                  <td>{symptom.SYMP_NAME}</td>
-                  <td>{symptom.START_DATE}</td>
-                  <td>{symptom.END_DATE || "Ongoing"}</td>
-                  <td>{symptom.SERIOUS_LEVEL}</td>
+              {symptoms.length > 0 ? (
+                symptoms.map((symptom, index) => (
+                  <tr key={index}>
+                    <td>{symptom.SYMP_NAME}</td>
+                    <td>{symptom.START_DATE.replace("T", " ")}</td>
+                    <td>{symptom.END_DATE.replace("T", " ") || "Ongoing"}</td>
+                    <td>{symptom.SERIOUS_LEVEL}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8">No symtomps found</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </section>
@@ -150,11 +162,17 @@ const PatientReport = ({
             </thead>
             <tbody>
               {/* Data Rows */}
-              <tr>
-                {Comorbidity.map((each) => (
-                  <td>{each.COMORBIDITY_NAME}</td>
-                ))}
-              </tr>
+              {Comorbidity && Comorbidity.length > 0 ? (
+                Comorbidity.map((each, index) => (
+                  <tr key={index}>
+                    <td>{each.COMORBIDITY_NAME}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="1">No comorbidities found.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </section>
@@ -174,16 +192,32 @@ const PatientReport = ({
               </tr>
             </thead>
             <tbody>
-              {symptoms.map((treatment, index) => (
-                <tr key={index}>
-                  <td>{treatment.treatmentID}</td>
-                  <td>{treatment.startDate}</td>
-                  <td>{treatment.endDate}</td>
-                  <td>{treatment.doctorID}</td>
-                  <td>{treatment.result}</td>
-                  <td>{treatment.medicine}</td>
+              {treatments.length > 0 ? (
+                treatments.map((treatment, index) => (
+                  <tr key={index}>
+                    <td>{treatment.TREAT_ID}</td>
+                    <td>
+                      {treatment.DOCTOR_ID.map((doctorId, idx) => (
+                        <div key={idx}>{doctorId}</div>
+                      ))}
+                    </td>
+                    <td>{treatment.START_DATE.replace("T", " ")}</td>
+                    <td>{treatment.END_DATE.replace("T", " ")}</td>
+                    <td>{treatment.RESULT}</td>
+                    <td>
+                      {treatment.MEDICINE.map((medicine, idx) => (
+                        <div key={idx}>
+                          MCODE: {medicine.MCODE}, Quantity: {medicine.QUANTITY}
+                        </div>
+                      ))}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6">No treatment data available</td>
                 </tr>
-              ))}
+              )}
             </tbody>
           </table>
         </section>

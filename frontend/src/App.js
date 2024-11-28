@@ -11,7 +11,7 @@ import Commobidity from "./Commobidity";
 import Protect from "./Protect";
 import Layout from "./Layout";
 function App() {
-  const API_URL = "http://localhost:8000";
+  const API_URL = "http://127.0.0.1:8000";
 
   const [username, setUserName] = useState("");
 
@@ -23,14 +23,16 @@ function App() {
 
   const [test, setTest] = useState([]);
 
-  const { Comorbidity, setcom } = useState([]);
+  const [Comorbidity, setcom] = useState([]);
 
   useEffect(() => {
     const fetchPatients = async () => {
       try {
         const response = await fetch(
           `${API_URL}/${
-            searchReal ? `search/name/${searchReal}` : "all-patients"
+            searchReal
+              ? `patient/search/name/${searchReal}`
+              : "patient/all-patients"
           }`
         );
         if (!response.ok) {
@@ -77,7 +79,7 @@ function App() {
             />
           }
         />
-        <Route path="/new" element={<AddNewPatient />} />
+        <Route path="/new" element={<AddNewPatient API_URL={API_URL} />} />
         <Route
           path="/test/:Id"
           element={<TestInfo test={test} setTest={setTest} API_URL={API_URL} />}
@@ -88,7 +90,6 @@ function App() {
             <Report
               test={test}
               setTest={setTest}
-              patients={patients}
               API_URL={API_URL}
               Comorbidity={Comorbidity}
               setcom={setcom}

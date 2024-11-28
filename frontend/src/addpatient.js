@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import addStyles from "./addpatient.module.css";
-import apiRequest from "./apiRequest.js";
 
-const AddPatient = () => {
+const AddPatient = ({ API_URL }) => {
   const symptomOptions = [
     "Fever or chills",
     "Cough",
@@ -16,44 +15,38 @@ const AddPatient = () => {
     "Nausea or vomiting",
     "Diarrhea",
   ];
-  const seriousnessOptions = ["Mild", "Moderate", "Severe"];
+  const seriousnessOptions = [
+    { label: "Mild", value: 1 },
+    { label: "Moderate", value: 2 },
+    { label: "Severe", value: 3 },
+  ];
 
   const [symptoms, setSymptoms] = useState([]);
 
   const [test, setTest] = useState({
-    Id: "",
-    PCR_Test_Result: "",
-    pcr_Ct_Value: "",
-    QT_Test_Result: "",
-    qt_Ct_Value: "",
-    Res: "",
+    Date_time: "",
+    PCR_result: false,
+    PCR_ct_value: "",
+    QT_result: false,
+    QT_ct_value: "",
+    Respiratory_rate: "",
     SPO2: "",
   });
 
-  const [fetchError, setFetchError] = useState(null);
-
   const [form, setForm] = useState({
-    PNUMBER: "",
-    fullname: "",
+    Fullname: "",
     PID: "",
     Gender: "",
     Risk_level: "",
     Address: "",
     Phone: "",
-    symptom: [],
-    comorbidity: [],
-    Test: {
-      Id: "",
-      PCR_Test_Result: "",
-      pcr_Ct_Value: "",
-      QT_Test_Result: "",
-      qt_Ct_Value: "",
-      Res: "",
-      SPO2: "",
-    },
+    Symptom: [],
+    Comorbidity: [],
+    Test: [],
   });
 
   const [comorbidities, setComorbidities] = useState([]);
+
   const addForm = async (item) => {
     const postOptions = {
       method: "POST",
@@ -62,16 +55,53 @@ const AddPatient = () => {
       },
       body: JSON.stringify(item),
     };
-    const result = await apiRequest("API_URL", postOptions);
-    if (result) setFetchError(result);
+
+    try {
+      const response = await fetch(`${API_URL}/patient/insert`, postOptions);
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(
+          error.message || "Cannot add patient! Please try again."
+        );
+      }
+
+      const data = await response.json();
+      alert("Patient added successfully!");
+
+      setForm({
+        Fullname: "",
+        PID: "",
+        Gender: "",
+        Risk_level: "",
+        Address: "",
+        Phone: "",
+        Symptom: [],
+        Comorbidity: [],
+        Test: [],
+      });
+      setSymptoms([]);
+      setComorbidities([]);
+      setTest({
+        Date_time: "",
+        PCR_result: false,
+        PCR_ct_value: "",
+        QT_result: false,
+        QT_ct_value: "",
+        Respiratory_rate: "",
+        SPO2: "",
+      });
+    } catch (err) {
+      alert(`Error: ${err.message}`);
+    }
   };
 
   useEffect(() => {
-    setForm((form) => ({
-      ...form,
-      symptom: symptoms,
-      comorbidity: comorbidities,
-      Test: test,
+    setForm((prevForm) => ({
+      ...prevForm,
+      Symptom: symptoms,
+      Comorbidity: comorbidities,
+      Test: [test],
     }));
   }, [symptoms, comorbidities, test]);
 
@@ -93,32 +123,28 @@ const AddPatient = () => {
 
   const handleSymptomChange = (index, field, value) => {
     const newSymptoms = [...symptoms];
-    newSymptoms[index][field] = value;
+    newSymptoms[index][field] = field === "seriousness" ? String(value) : value;
     setSymptoms(newSymptoms);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form) return;
-    addForm(form);
+
+    const formattedForm = {
+      ...form,
+      Symptom: symptoms.map((symptom) => ({
+        ...symptom,
+        startDate: new Date(symptom.startDate).toISOString(),
+        endDate: symptom.endDate
+          ? new Date(symptom.endDate).toISOString()
+          : null,
+        seriousness: symptom.seriousness,
+      })),
+    };
+    console.log(JSON.stringify(formattedForm, null, 2)); // Debug payload
+    await addForm(formattedForm);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   // Create a JSON blob from the form data
-  //   const dataStr = JSON.stringify(form, null, 2);
-  //   const blob = new Blob([dataStr], { type: "application/json" });
-  //   // Create a link to download the blob
-  //   const url = URL.createObjectURL(blob);
-  //   const link = document.createElement("a");
-  //   link.href = url;
-  //   link.download = "patient_data.json";
-  //   document.body.appendChild(link);
-  //   link.click();
-  //   document.body.removeChild(link);
-  //   // Clean up the URL object
-  //   URL.revokeObjectURL(url);
-  // };
   return (
     <div className={addStyles.container}>
       <h1>Add New Patient</h1>
@@ -135,8 +161,8 @@ const AddPatient = () => {
             <input
               type="text"
               placeholder="Enter full name"
-              value={form.fullname}
-              onChange={(e) => handleInput("fullname", e.target.value)}
+              value={form.Fullname}
+              onChange={(e) => handleInput("Fullname", e.target.value)}
             />
           </div>
           <div>
@@ -196,46 +222,40 @@ const AddPatient = () => {
           <h2>Testing Information</h2>
           <div>
             <label>Test ID</label>
-            <input
-              type="text"
-              placeholder="Enter Test ID"
-              value={test.Id}
-              onChange={(e) => setTest({ ...test, Id: e.target.value })}
-            />
+            <input type="text" placeholder="Enter Test ID" value="1" />
           </div>
           <div>
             <label>PCR Test Result</label>
             <select
-              value={test.PCR_Test_Result}
-              onChange={(e) => {
-                const value = e.target.value;
+              value={test.PCR_result ? "Positive" : "Negative"}
+              onChange={(e) =>
                 setTest((prevTest) => ({
                   ...prevTest,
-                  PCR_Test_Result: value,
-                  pcr_Ct_Value:
-                    value === "Positive" ? prevTest.pcr_Ct_Value : "",
-                }));
-              }}
+                  PCR_result: e.target.value === "Positive",
+                  // Reset PCR_ct_value if PCR_result is false
+                  PCR_ct_value:
+                    e.target.value === "Positive" ? prevTest.PCR_ct_value : "",
+                }))
+              }
             >
-              <option value="">Select PCR Test Result</option>
-              <option>Positive</option>
-              <option>Negative</option>
+              <option value="Negative">Negative</option>
+              <option value="Positive">Positive</option>
             </select>
           </div>
           {/* Show PCR CT Value field only if the PCR test result is Positive */}
-          {test.PCR_Test_Result === "Positive" && (
+          {test.PCR_result && (
             <div>
               <label>PCR Test CT Value</label>
               <input
                 type="text"
                 placeholder="Enter CT Value"
-                value={test.pcr_Ct_Value}
-                onChange={(e) =>
+                value={test.PCR_ct_value}
+                onChange={(e) => {
                   setTest((prevTest) => ({
                     ...prevTest,
-                    pcr_Ct_Value: e.target.value,
-                  }))
-                }
+                    PCR_ct_value: e.target.value,
+                  }));
+                }}
               />
             </div>
           )}
@@ -243,46 +263,48 @@ const AddPatient = () => {
           <div>
             <label>Quick Test Result</label>
             <select
-              value={test.QT_Test_Result}
-              onChange={(e) => {
-                const value = e.target.value;
+              value={test.QT_result ? "Positive" : "Negative"}
+              onChange={(e) =>
                 setTest((prevTest) => ({
                   ...prevTest,
-                  QT_Test_Result: value,
-                  qt_Ct_Value: value === "Positive" ? prevTest.qt_Ct_Value : "",
-                }));
-              }}
+                  QT_result: e.target.value === "Positive",
+                  // Reset QT_ct_value if QT_result is false
+                  QT_ct_value:
+                    e.target.value === "Positive" ? prevTest.QT_ct_value : "",
+                }))
+              }
             >
-              <option value="">Select QT Test Result</option>
-              <option>Positive</option>
-              <option>Negative</option>
+              <option value="Negative">Negative</option>
+              <option value="Positive">Positive</option>
             </select>
           </div>
           {/* Show QT CT Value field only if the QT test result is Positive */}
-          {test.QT_Test_Result === "Positive" && (
+          {test.QT_result && (
             <div>
               <label>QT Test CT Value</label>
               <input
                 type="text"
                 placeholder="Enter CT Value"
-                value={test.qt_Ct_Value}
-                onChange={(e) =>
+                value={test.QT_ct_value}
+                onChange={(e) => {
                   setTest((prevTest) => ({
                     ...prevTest,
-                    qt_Ct_Value: e.target.value,
-                  }))
-                }
+                    QT_ct_value: e.target.value,
+                  }));
+                }}
               />
             </div>
           )}
-
+          {/* Removed duplicated QT Test CT Value field */}
           <div>
             <label>Respiratory Rate</label>
             <input
               type="text"
               placeholder="Enter Respiratory rate"
-              value={test.Res}
-              onChange={(e) => setTest({ ...test, Res: e.target.value })}
+              value={test.Respiratory_rate}
+              onChange={(e) =>
+                setTest({ ...test, Respiratory_rate: e.target.value })
+              }
             />
           </div>
           <div>
@@ -346,9 +368,9 @@ const AddPatient = () => {
                       }
                     >
                       <option value="">Select serious levels</option>
-                      {seriousnessOptions.map((option, i) => (
-                        <option key={i} value={option}>
-                          {option}
+                      {seriousnessOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
                         </option>
                       ))}
                     </select>
@@ -396,11 +418,41 @@ const AddPatient = () => {
         <button className={addStyles.done} type="submit">
           Done
         </button>
-        {/* Display fetch error if any */}
-        {fetchError && <p className={addStyles.error}>{fetchError}</p>}
       </form>
     </div>
   );
 };
 
 export default AddPatient;
+
+// {
+//   "Fullname": "aaa",
+//   "PID": "046204001348",
+//   "Gender": "",
+//   "Risk_level": "",
+//   "Address": "268 Lý Thường Kiệt, Quận 10, TPHCM",
+//   "Phone": "90566906",
+//   "Symptom": [
+//     {
+//       "name": "Fever or chills",
+//       "startDate": "2024-10-29T00:00:00.000Z",
+//       "seriousness": "2",
+//       "endDate": null
+//     }
+//   ],
+//   "Comorbidity": [
+//     "Weakened immune system",
+//     "Kidney disease"
+//   ],
+//   "Test": [
+//     {
+//       "Date_time": "",
+//       "PCR_result": false,
+//       "PCR_ct_value": "",
+//       "QT_result": false,
+//       "QT_ct_value": "",
+//       "Respiratory_rate": "222",
+//       "SPO2": "12"
+//     }
+//   ]
+// }

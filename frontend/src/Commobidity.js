@@ -10,7 +10,7 @@ const Commobidity = ({ API_URL, Comorbidity, setcom }) => {
   useEffect(() => {
     const fetchCom = async () => {
       try {
-        const response = await fetch(`${API_URL}/comorbidity/${Id}`);
+        const response = await fetch(`${API_URL}/patient/comorbidity/${Id}`);
         if (!response.ok) {
           throw new Error("Failed to fetch Comorbidity");
         }
