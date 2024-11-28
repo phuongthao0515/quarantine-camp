@@ -96,7 +96,7 @@ async def get_all_patients():
         cursor.close()
     
 # Find and return the all patient with given name ( name is a string, can be both upper and lower case, doesn't need full name)
-@router.get("/search/{name}", response_model=List[patient])
+@router.get("/search/name/{name}", response_model=List[patient])
 async def get_patient_by_name(name: str):
     try:
         cursor = conn.cursor(dictionary=True)
@@ -115,6 +115,28 @@ async def get_patient_by_name(name: str):
         raise HTTPException(status_code=500, detail=str(e))
     finally:
         cursor.close()
+
+# Find and return patient with PNUM
+@router.get("/search/pnum/{pnum}", response_model= patient)
+async def get_patient_by_PNUM(pnum: str):
+    try:
+        cursor = conn.cursor(dictionary=True)
+
+        # Fetch patients by FULLNAME
+        query = "SELECT * FROM patient WHERE PNUMBER = %s"
+        cursor.execute(query, ( pnum,))
+        patients = cursor.fetchall()
+
+        # If no patients are found, raise a 404 error
+        if not patients:
+            raise HTTPException(status_code=404, detail="Patient not found!!")
+
+        return patients
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+
 
 # Find and return a LIMIT number of patient with name
 @router.get("/search/{name}/{limit}", response_model=List[patient])
@@ -203,13 +225,14 @@ async def get_comorbidity_by_pnumber(pnum: str):
 async def get_all_patient_report(pnum: str):
     try:
         # Call the previously defined functions to get the patient report
+        patient_info = await get_patient_by_PNUM(pnum)
         list_of_test_results = await get_test_by_pnumber(pnum)  # Fetch test results
         list_of_symptoms = await get_symptom_by_pnumber(pnum)  # Fetch symptoms
         list_of_comorbidities = await get_comorbidity_by_pnumber(pnum)  # Fetch comorbidities
 
         # Combine all the data into a single report
         report = {
-            "pnumber": pnum,
+            "patient_info": patient_info,
             "test_results": list_of_test_results,
             "symptoms": list_of_symptoms,
             "comorbidities": list_of_comorbidities
