@@ -203,16 +203,16 @@ async def get_comorbidity_by_pnumber(pnum: str):
 async def get_all_patient_report(pnum: str):
     try:
         # Call the previously defined functions to get the patient report
-        test_results = await get_test_by_pnumber(pnum)  # Fetch test results
-        symptoms = await get_symptom_by_pnumber(pnum)  # Fetch symptoms
-        comorbidities = await get_comorbidity_by_pnumber(pnum)  # Fetch comorbidities
+        list_of_test_results = await get_test_by_pnumber(pnum)  # Fetch test results
+        list_of_symptoms = await get_symptom_by_pnumber(pnum)  # Fetch symptoms
+        list_of_comorbidities = await get_comorbidity_by_pnumber(pnum)  # Fetch comorbidities
 
         # Combine all the data into a single report
         report = {
             "pnumber": pnum,
-            "test_results": test_results,
-            "symptoms": symptom,
-            "comorbidities": comorbidities
+            "test_results": list_of_test_results,
+            "symptoms": list_of_symptoms,
+            "comorbidities": list_of_comorbidities
         }
         return report
     except HTTPException as e:
