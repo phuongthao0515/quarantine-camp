@@ -2,14 +2,31 @@ import React from "react";
 import styles from "./Commobidity.module.css";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-const Commobidity = ({ patients }) => {
+import { useEffect } from "react";
+const Commobidity = ({ API_URL, Comorbidity, setcom }) => {
   const { Id } = useParams();
 
-  const patient = patients.find((patient) => patient.PNUMBER.toString() === Id);
+  // Fetch com data
+  useEffect(() => {
+    const fetchCom = async () => {
+      try {
+        const response = await fetch(`${API_URL}/comorbidity/${Id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch Comorbidity");
+        }
+        const data = await response.json();
+        setcom(data);
+      } catch (error) {
+        console.error("Error fetching Comorbidity:", error);
+      }
+    };
+
+    fetchCom();
+  }, [Id]);
   return (
     <div className="container">
       <main className={styles.main}>
-        <h1>Patient Number: {patient.PNUMBER}</h1>
+        <h1>Patient Number: {Id}</h1>
 
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Comorbidity</h2>
@@ -21,9 +38,17 @@ const Commobidity = ({ patients }) => {
             </thead>
             <tbody>
               {/* Data Rows */}
-              <tr>
-                <td>Obesity</td>
-              </tr>
+              {Comorbidity && Comorbidity.length > 0 ? (
+                Comorbidity.map((each, index) => (
+                  <tr key={index}>
+                    <td>{each.COMORBIDITY_NAME}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="1">No comorbidities found.</td>
+                </tr>
+              )}
             </tbody>
           </table>
         </section>

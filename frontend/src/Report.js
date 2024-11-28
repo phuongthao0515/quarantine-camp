@@ -3,57 +3,38 @@ import styles from "./report.module.css";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-const PatientReport = ({ test, setTest, patients }) => {
+const PatientReport = ({
+  test,
+  setTest,
+  patients,
+  API_URL,
+  Comorbidity,
+  setcom,
+}) => {
   const { Id } = useParams();
 
   const patient = patients.find((patient) => patient.PNUMBER.toString() === Id);
-  const [symptoms, setSymptoms] = useState([
-    {
-      name: "Fever",
-      startDate: "2024-11-20",
-      endDate: "2024-11-22",
-      seriousLevel: 2,
-    },
-    {
-      name: "Cough",
-      startDate: "2024-11-18",
-      endDate: "2024-11-22",
-      seriousLevel: 3,
-    },
-  ]);
+  const [symptoms, setSymptoms] = useState([]);
+  // Fetch report data
+  useEffect(() => {
+    const fetchReport = async () => {
+      try {
+        const response = await fetch(`${API_URL}/report/${Id}`);
+        if (!response.ok) {
+          throw new Error("Failed to Report information");
+        }
+        const data = await response.json();
+        setcom(data.comorbidities);
+        setSymptoms(data.symptoms);
+        setTest(data.test_results);
+        patient = data.patient_info;
+      } catch (error) {
+        console.error("Error fetching Report:", error);
+      }
+    };
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       // Fetch all data concurrently
-  //       const [testResponse, patientResponse, symptomResponse] =
-  //         await Promise.all([
-  //           fetch(`/tests/${pnum}`), // Fetch test information by `pnum`
-  //           fetch(`/patients/${pnum}`), // Fetch patient information by `pnum`
-  //           fetch(`/symptoms/${pnum}`), // Fetch symptom information by `pnum`
-  //         ]);
-
-  //       // Check if any of the responses are not OK
-  //       if (!testResponse.ok || !patientResponse.ok || !symptomResponse.ok) {
-  //         throw new Error("Failed to fetch one or more resources");
-  //       }
-
-  //       // Parse JSON responses
-  //       const testData = await testResponse.json();
-  //       const patientData = await patientResponse.json();
-  //       const symptomData = await symptomResponse.json();
-
-  //       // Update state with the fetched data
-  //       setTest(testData);
-  //       setPatient(patientData);
-  //       setSymptom(symptomData);
-  //     } catch (error) {
-  //       console.error("Error fetching data:", error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, [pnum]);
+    fetchReport();
+  }, [Id]);
   return (
     <div className="container">
       <main className={styles.main}>
@@ -112,16 +93,16 @@ const PatientReport = ({ test, setTest, patients }) => {
             </thead>
             <tbody>
               {test.length > 0 ? (
-                test.map((testEntry, index) => (
-                  <tr key={index}>
-                    <td>{testEntry.Test_ID}</td>
-                    <td>{testEntry.PNUM}</td>
-                    <td>{testEntry.Quick_test_result}</td>
-                    <td>{testEntry.Quick_test_ct_value}</td>
-                    <td>{testEntry.Respiratory_rate}</td>
-                    <td>{testEntry.PCR_test_result}</td>
-                    <td>{testEntry.PCR_test_ct_value}</td>
-                    <td>{testEntry.SPO2}%</td>
+                test.map((each) => (
+                  <tr>
+                    <td>{each.Test_ID}</td>
+                    <td>{each.PNUMBER}</td>
+                    <td>{each.QT_result}</td>
+                    <td>{each.QT_ct_value}</td>
+                    <td>{each.Respiratory_rate}</td>
+                    <td>{each.PCR_result}</td>
+                    <td>{each.PCR_ct_value}</td>
+                    <td>{each.SPO2}%</td>
                   </tr>
                 ))
               ) : (
@@ -148,10 +129,10 @@ const PatientReport = ({ test, setTest, patients }) => {
             <tbody>
               {symptoms.map((symptom, index) => (
                 <tr key={index}>
-                  <td>{symptom.name}</td>
-                  <td>{symptom.startDate}</td>
-                  <td>{symptom.endDate || "Ongoing"}</td>
-                  <td>{symptom.seriousLevel}</td>
+                  <td>{symptom.SYMP_NAME}</td>
+                  <td>{symptom.START_DATE}</td>
+                  <td>{symptom.END_DATE || "Ongoing"}</td>
+                  <td>{symptom.SERIOUS_LEVEL}</td>
                 </tr>
               ))}
             </tbody>
@@ -164,23 +145,22 @@ const PatientReport = ({ test, setTest, patients }) => {
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Patient Number</th>
                 <th>Comorbidity Name</th>
               </tr>
             </thead>
             <tbody>
               {/* Data Rows */}
               <tr>
-                <td>10000001</td>
-                <td>Obesity</td>
+                {Comorbidity.map((each) => (
+                  <td>{each.COMORBIDITY_NAME}</td>
+                ))}
               </tr>
             </tbody>
           </table>
         </section>
 
-
-          {/* Treatment Section */}
-          <section className={styles.section}>
+        {/* Treatment Section */}
+        <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Treatment</h2>
           <table className={styles.table}>
             <thead>
@@ -207,7 +187,6 @@ const PatientReport = ({ test, setTest, patients }) => {
             </tbody>
           </table>
         </section>
-
 
         <Link to={`/search`} style={{ textDecoration: "none" }}>
           <button className={styles.backButton}>BACK TO MAIN</button>

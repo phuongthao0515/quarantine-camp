@@ -2,26 +2,25 @@ import React from "react";
 import styles from "./testinfo.module.css";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-const PatientTestingInfo = ({ test, setTest }) => {
+const PatientTestingInfo = ({ test, setTest, API_URL }) => {
   const { Id } = useParams();
-
   // Fetch test data
-  // useEffect(() => {
-  //   const fetchTestInfo = async () => {
-  //     try {
-  //       const response = await fetch(`/tests?name=${Id}`);
-  //       if (!response.ok) {
-  //         throw new Error("Failed to fetch test information");
-  //       }
-  //       const data = await response.json();
-  //       setTest(data);
-  //     } catch (error) {
-  //       console.error("Error fetching test information:", error);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchTestInfo = async () => {
+      try {
+        const response = await fetch(`${API_URL}/test/${Id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch test information");
+        }
+        const data = await response.json();
+        setTest(data);
+      } catch (error) {
+        console.error("Error fetching test information:", error);
+      }
+    };
 
-  //   fetchTestInfo();
-  // }, [Id,setTest]); // Run this effect whenever `pnum` changes
+    fetchTestInfo();
+  }, [Id]);
 
   return (
     <div className="container">
@@ -51,12 +50,12 @@ const PatientTestingInfo = ({ test, setTest }) => {
                 {test.map((each) => (
                   <tr>
                     <td>{each.Test_ID}</td>
-                    <td>{each.PNUM}</td>
-                    <td>{each.Quick_test_result}</td>
-                    <td>{each.Quick_test_ct_value}</td>
+                    <td>{each.PNUMBER}</td>
+                    <td>{each.QT_result}</td>
+                    <td>{each.QT_ct_value}</td>
                     <td>{each.Respiratory_rate}</td>
-                    <td>{each.PCR_test_result}</td>
-                    <td>{each.PCR_test_ct_value}</td>
+                    <td>{each.PCR_result}</td>
+                    <td>{each.PCR_ct_value}</td>
                     <td>{each.SPO2}%</td>
                   </tr>
                 ))}

@@ -2,6 +2,7 @@ import React from "react";
 import search from "./search_page.module.css";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+
 const PatientInfo = ({ searchReal, searchResult, setSearch }) => {
   const [page, setPage] = useState(1);
   const pageNums = Math.ceil(searchResult.length / 10);
