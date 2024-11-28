@@ -95,6 +95,15 @@ class patient_has_comorbidity(BaseModel):
     PNUM: str = Field(min_length=8, max_length=8)
     COMORBIDITY_NAME: comorbidity
 
+class treatment(BaseModel):
+    PNUM: str = Field(min_length=8, max_length=8)
+    TREAT_ID: int
+    DOCTOR_ID: str = Field(min_length=4, max_length=4)
+    START_DATE: datetime 
+    END_DATE: Optional[datetime] = None
+    RESULT: Optional[str] = None
+    MCODE: int
+    QUANTITY: int
 ########## Special Class for Insert from front end ###########
 
 class symptom_element(BaseModel):
@@ -122,9 +131,6 @@ class patient_full_info(BaseModel):
     Symptom: List[symptom_element] = Field(default_factory=list)  # Default empty list
     Comorbidity: List[comorbidity] = Field(default_factory=list)  # Default empty list
     Test: Optional[List[Test_Result_B]] = None  
-
-
-
 
 class Config:
         # Allow None for any fields that are optional
