@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from database import conn
 from typing import List
 
-from model import patient, Test_Result, patient_full_info, symptoms, comorbidity
+from model import patient, Test_Result, patient_full_info, symptom, comorbidity
 from itertools import zip_longest
 
 # Create a router instance
@@ -159,7 +159,7 @@ async def get_test_by_pnumber(pnum: str):
         cursor.close()
 
 # Return all symptom for a patient
-@router.get("/symptom/{pnum}", response_model=List[symptoms])
+@router.get("/symptom/{pnum}", response_model=List[symptom])
 async def get_symptom_by_pnumber(pnum: str):
     try:
         cursor = conn.cursor(dictionary=True)
@@ -212,10 +212,9 @@ async def get_all_patient_report(pnum: str):
         report = {
             "pnumber": pnum,
             "test_results": test_results,
-            "symptoms": symptoms,
+            "symptoms": symptom,
             "comorbidities": comorbidities
         }
-
         return report
     except HTTPException as e:
         raise e  # Return any 404 or other errors from the called functions
