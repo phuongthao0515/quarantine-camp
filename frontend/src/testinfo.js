@@ -1,11 +1,30 @@
 import React from "react";
 import styles from "./testinfo.module.css";
-import Header from "./header.js";
-import logo from "./component/logo covide-19.png";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+const PatientTestingInfo = ({ test, setTest, API_URL }) => {
+  const { Id } = useParams();
+  // Fetch test data
+  useEffect(() => {
+    const fetchTestInfo = async () => {
+      try {
+        const response = await fetch(`${API_URL}/patient/test/${Id}`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch test information");
+        }
+        const data = await response.json();
+        setTest(data);
+      } catch (error) {
+        console.error("Error fetching test information:", error);
+      }
+    };
 
-const PatientTestingInfo = () => {
+    fetchTestInfo();
+  }, [Id, API_URL, setTest]);
+
   return (
-    <div className={styles.container}>
+    <div className="container">
       <div className={styles.patient_info}>
         {/* Main Section */}
         <main>
@@ -29,19 +48,31 @@ const PatientTestingInfo = () => {
               </thead>
               <tbody>
                 {/* Row with actual data */}
-                <tr>
-                  <td>1000000</td>
-                  <td>00001</td>
-                  <td>Positive</td>
-                  <td>35</td>
-                  <td>18</td>
-                  <td>Positive</td>
-                  <td>40</td>
-                  <td>98%</td>
-                </tr>
+
+                {test.length > 0 ? (
+                  test.map((each, index) => (
+                    <tr key={index}>
+                      <td>{each.PNUMBER}</td>
+                      <td>{each.TEST_ID}</td>
+                      <td>{each.Qt_result}</td>
+                      <td>{each.QT_ct_value}</td>
+                      <td>{each.RESPIRATORY_RATE}</td>
+                      <td>{each.PCR_result}</td>
+                      <td>{each.PCR_ct_value}</td>
+                      <td>{each.SPO2}%</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="8">No test data available</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
+          <Link to={`/search`} style={{ textDecoration: "none" }}>
+            <button className={styles.backButton}>BACK TO MAIN</button>
+          </Link>
         </main>
       </div>
     </div>

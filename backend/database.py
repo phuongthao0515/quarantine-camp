@@ -3,29 +3,26 @@ from mysql.connector import connection
 from mysql.connector import Error
 from typing import Optional
 
-# Database configuration
-# db_config = {
-#     "host": "127.0.0.1",
-#     "user": "PhuongThao",
-#     "password": "Thao@123",
-#     "database": "ptl",
-# }
 
+
+# Database configuration
 db_config = {
     "host": "localhost",
     "user": "Manager",
     "password": "Manager123",
     "database": "dbassignment",
 }
-# conn = get_connection()
 conn: Optional[connection.MySQLConnection] = None
 
-# Function to get a database connection
 def get_connection() -> connection.MySQLConnection:
+    global conn
     try:
-        global conn 
-        conn = mysql.connector.connect(**db_config)
+        if conn is None or not conn.is_connected():
+            conn = mysql.connector.connect(**db_config)
         return conn
     except Error as e:
-        raise Exception(f"Database connection error: {str(e)}")
-
+        print(f"Database connection error: {e}")
+        conn = None
+        raise
+conn = get_connection()
+print("Initialize Connection to Database")

@@ -1,8 +1,8 @@
 import React from "react";
 import search from "./search_page.module.css";
-import logo from "./component/logo covide-19.png";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+
 const PatientInfo = ({ searchReal, searchResult, setSearch }) => {
   const [page, setPage] = useState(1);
   const pageNums = Math.ceil(searchResult.length / 10);
@@ -33,7 +33,7 @@ const PatientInfo = ({ searchReal, searchResult, setSearch }) => {
             <thead>
               <tr>
                 <th>No</th>
-                <th>PID</th>
+                <th>Patient Number</th>
                 <th>Patient Name</th>
                 <th>Phone</th>
                 <th>Comorbidities</th>

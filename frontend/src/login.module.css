@@ -3,10 +3,6 @@ body {
   justify-content: center;
 }
 
-.container {
-  width: 1440px;
-}
-
 /* General Page Styling */
 .login_page {
   font-family: "Rubik";
@@ -34,6 +30,7 @@ body {
 .nav {
   display: flex;
   align-items: center;
+  gap: 10px;
 }
 
 .nav_link {
@@ -72,8 +69,8 @@ body {
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  width: 450px;
-  height: 300px;
+  width: 430px;
+  height: 350px; /* Use dynamic height to fit content neatly */
   margin-left: 100px;
 }
 
@@ -84,34 +81,54 @@ body {
 }
 
 .form_group {
-  margin-bottom: 15px;
+  min-width: 400px;
+  margin-bottom: -25px;
 }
 
 .form_group label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
+  font-size: 14px;
+  font-weight: 600;
+  color: #4a3f65;
+  margin-left: 20px;
+  margin-bottom: 8px;
 }
 
 .form_group input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #bcacfb;
-  color: #bcacfb;
+  padding: 12px;
+  border: 1px solid #d4d4d4;
   border-radius: 5px;
+  font-size: 14px;
+  color: #4a3f65;
+  margin-left: 20px;
+  transition: all 0.3s ease;
+}
+
+.form_group input:focus {
+  border-color: #6533a6;
+  box-shadow: 0px 0px 8px rgba(101, 51, 166, 0.3);
+  outline: none;
 }
 
 .form_options {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  width: 100%;
+  margin-left: 10px;
+  margin-bottom: -30px;
 }
 
 .forgot_password_link {
-  text-decoration: none;
-  color: #4a3f65;
   font-size: 14px;
+  text-decoration: none;
+  color: #6533a6;
+  transition: color 0.3s ease;
+  margin-top: -10px;
+}
+.forgot_password_link:hover {
+  text-decoration: underline;
+  color: #372d4d;
 }
 
 .login_button {
@@ -123,6 +140,10 @@ body {
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
+  width: 360px;
+  padding: 10px 20px;
+  margin-left: 30px;
+  margin-top: -10px;
 }
 
 .login_button:hover {
@@ -131,3 +152,14 @@ body {
 .remember_password {
   font-size: 14px;
 }
+.remember_password input {
+  margin-top: -20px;
+  margin-right: 8px;
+  cursor: pointer;
+}
+/* .login_button {
+  width: 360px;
+  padding: 10px 20px;
+  margin-left: 30px;
+  margin-top: -10px;
+} */
