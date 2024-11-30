@@ -24,12 +24,25 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(employee.router)
 app.include_router(patient.router)
 
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=["http://localhost:5173"],  # React frontend URL
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
+
+origins = [
+    "http://localhost:3000",  # Your frontend URL
+    "http://127.0.0.1:3000", # Optional, in case you're using a different URL
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # React frontend URL
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_origins=origins,  # Allows requests from specific origins
+    allow_credentials=True,  # Allow cookies to be sent with requests
+    allow_methods=["*"],  # Allow all HTTP methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allow all headers (e.g., Content-Type, Authorization)
 )
 
 @app.get("/")
