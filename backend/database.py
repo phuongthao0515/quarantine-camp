@@ -13,8 +13,8 @@ from typing import Optional
 
 db_config = {
     "host": "localhost",
-    "user": "Hieu74",
-    "password": "Hieu@742004",
+    "user": "Manager",
+    "password": "Manager123",
     "database": "dbassignment",
 }
 # conn = get_connection()
