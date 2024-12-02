@@ -359,6 +359,7 @@ const AddPatient = ({ API_URL }) => {
                   Respiratory_rate: parseFloat(e.target.value),
                 })
               }
+              required
             />
           </div>
           <div>
@@ -373,6 +374,7 @@ const AddPatient = ({ API_URL }) => {
               onChange={(e) =>
                 setTest({ ...test, SPO2: parseFloat(e.target.value) })
               }
+              required
             />
           </div>
         </section>
@@ -397,6 +399,7 @@ const AddPatient = ({ API_URL }) => {
                       onChange={(e) =>
                         handleSymptomChange(index, "name", e.target.value)
                       }
+                      required
                     >
                       <option value="">Select a symptom</option>
                       {symptomOptions.map((option, i) => (
@@ -425,6 +428,7 @@ const AddPatient = ({ API_URL }) => {
                           e.target.value
                         )
                       }
+                      required
                     >
                       <option value="">Select serious levels</option>
                       {seriousnessOptions.map((option) => (
