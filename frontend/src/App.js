@@ -79,7 +79,12 @@ function App() {
             />
           }
         />
-        <Route path="/new" element={<AddNewPatient API_URL={API_URL} />} />
+        <Route
+          path="/new"
+          element={
+            <AddNewPatient API_URL={API_URL} setPatients={setPatients} />
+          }
+        />
         <Route
           path="/test/:Id"
           element={<TestInfo test={test} setTest={setTest} API_URL={API_URL} />}

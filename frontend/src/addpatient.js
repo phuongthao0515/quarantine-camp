@@ -36,13 +36,13 @@ const AddPatient = ({ API_URL }) => {
   const [form, setForm] = useState({
     Fullname: "",
     PID: "",
-    Gender: "",
-    Risk_level: "",
+    Gender: null,
+    Risk_level: null,
     Address: "",
     Phone: "",
     Symptom: [],
     Comorbidity: [],
-    Test: null,
+    Test: [],
   });
 
   const [comorbidities, setComorbidities] = useState([]);
@@ -91,6 +91,7 @@ const AddPatient = ({ API_URL }) => {
         Respiratory_rate: null,
         SPO2: null,
       });
+      window.location.reload();
     } catch (err) {
       alert(`Error: ${err.message}`);
     }
@@ -112,7 +113,7 @@ const AddPatient = ({ API_URL }) => {
   const handleAddSymptom = () => {
     setSymptoms([
       ...symptoms,
-      { name: "", startDate: null, endDate: null, seriousness: "" },
+      { name: "", startDate: null, endDate: null, seriousness: null },
     ]);
   };
 
@@ -180,7 +181,11 @@ const AddPatient = ({ API_URL }) => {
           <h2>Basic Information</h2>
           <div>
             <label>Patient Number</label>
-            <input type="text" placeholder="123" disabled />
+            <input
+              type="text"
+              placeholder="Automatically generated."
+              disabled
+            />
           </div>
           <div>
             <label>Full Name</label>
@@ -207,6 +212,7 @@ const AddPatient = ({ API_URL }) => {
             <select
               value={form.Gender}
               onChange={(e) => handleInput("Gender", e.target.value)}
+              required
             >
               <option value="">Select Gender</option>
               <option value="M">Male</option>
@@ -218,6 +224,7 @@ const AddPatient = ({ API_URL }) => {
             <select
               value={form.Risk_level}
               onChange={(e) => handleInput("Risk_level", e.target.value)}
+              required
             >
               <option value="">Select Risk Level</option>
               <option value="1">Low</option>

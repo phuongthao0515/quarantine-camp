@@ -138,7 +138,11 @@ const PatientReport = ({ test, setTest, API_URL, Comorbidity, setcom }) => {
                   <tr key={index}>
                     <td>{symptom.SYMP_NAME}</td>
                     <td>{symptom.START_DATE.replace("T", " ")}</td>
-                    <td>{symptom.END_DATE.replace("T", " ") || "Ongoing"}</td>
+                    <td>
+                      {(symptom.END_DATE &&
+                        symptom.END_DATE.replace("T", " ")) ||
+                        "Ongoing"}
+                    </td>
                     <td>{symptom.SERIOUS_LEVEL}</td>
                   </tr>
                 ))
