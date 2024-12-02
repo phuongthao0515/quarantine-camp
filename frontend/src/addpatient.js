@@ -24,13 +24,13 @@ const AddPatient = ({ API_URL }) => {
   const [symptoms, setSymptoms] = useState([]);
 
   const [test, setTest] = useState({
-    Date_time: "",
+    Date_time: null,
     PCR_result: false,
-    PCR_ct_value: "",
+    PCR_ct_value: null,
     QT_result: false,
-    QT_ct_value: "",
-    Respiratory_rate: "",
-    SPO2: "",
+    QT_ct_value: null,
+    Respiratory_rate: null,
+    SPO2: null,
   });
 
   const [form, setForm] = useState({
@@ -42,7 +42,7 @@ const AddPatient = ({ API_URL }) => {
     Phone: "",
     Symptom: [],
     Comorbidity: [],
-    Test: [],
+    Test: null,
   });
 
   const [comorbidities, setComorbidities] = useState([]);
@@ -78,18 +78,18 @@ const AddPatient = ({ API_URL }) => {
         Phone: "",
         Symptom: [],
         Comorbidity: [],
-        Test: [],
+        Test: null,
       });
       setSymptoms([]);
       setComorbidities([]);
       setTest({
-        Date_time: "",
+        Date_time: null,
         PCR_result: false,
-        PCR_ct_value: "",
+        PCR_ct_value: null,
         QT_result: false,
-        QT_ct_value: "",
-        Respiratory_rate: "",
-        SPO2: "",
+        QT_ct_value: null,
+        Respiratory_rate: null,
+        SPO2: null,
       });
     } catch (err) {
       alert(`Error: ${err.message}`);
@@ -97,16 +97,23 @@ const AddPatient = ({ API_URL }) => {
   };
 
   useEffect(() => {
+    const isTestEmpty = Object.values(test).every(
+      (value) => value === "" || value === false || value === null
+    );
+
     setForm((prevForm) => ({
       ...prevForm,
       Symptom: symptoms,
       Comorbidity: comorbidities,
-      Test: [test],
+      Test: isTestEmpty ? null : [test],
     }));
   }, [symptoms, comorbidities, test]);
 
   const handleAddSymptom = () => {
-    setSymptoms([...symptoms, { name: "", startDate: "", seriousness: "" }]);
+    setSymptoms([
+      ...symptoms,
+      { name: "", startDate: null, endDate: null, seriousness: "" },
+    ]);
   };
 
   const handleComorbidityClick = (comorbidity) => {
@@ -130,6 +137,16 @@ const AddPatient = ({ API_URL }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (form.PID && form.PID.length !== 12) {
+      alert("PID must be exactly 12 characters long.");
+      return;
+    }
+
+    if (form.Phone && form.Phone.length !== 9) {
+      alert("Phone number must be exactly 9 characters long.");
+      return;
+    }
+
     const formattedForm = {
       ...form,
       Symptom: symptoms.map((symptom) => ({
@@ -140,7 +157,16 @@ const AddPatient = ({ API_URL }) => {
           : null,
         seriousness: symptom.seriousness,
       })),
+      Test:
+        form.Test &&
+        form.Test.map((testItem) => ({
+          ...testItem,
+          Date_time: testItem.Date_time
+            ? new Date(testItem.Date_time).toISOString()
+            : null,
+        })),
     };
+
     console.log(JSON.stringify(formattedForm, null, 2)); // Debug payload
     await addForm(formattedForm);
   };
@@ -163,6 +189,7 @@ const AddPatient = ({ API_URL }) => {
               placeholder="Enter full name"
               value={form.Fullname}
               onChange={(e) => handleInput("Fullname", e.target.value)}
+              required
             />
           </div>
           <div>
@@ -171,6 +198,7 @@ const AddPatient = ({ API_URL }) => {
               type="text"
               placeholder="Enter patient ID"
               value={form.PID}
+              maxLength={12}
               onChange={(e) => handleInput("PID", e.target.value)}
             />
           </div>
@@ -181,8 +209,8 @@ const AddPatient = ({ API_URL }) => {
               onChange={(e) => handleInput("Gender", e.target.value)}
             >
               <option value="">Select Gender</option>
-              <option>Male</option>
-              <option>Female</option>
+              <option value="M">Male</option>
+              <option value="F">Female</option>
             </select>
           </div>
           <div>
@@ -192,9 +220,9 @@ const AddPatient = ({ API_URL }) => {
               onChange={(e) => handleInput("Risk_level", e.target.value)}
             >
               <option value="">Select Risk Level</option>
-              <option>Low</option>
-              <option>Medium</option>
-              <option>High</option>
+              <option value="1">Low</option>
+              <option value="2">Medium</option>
+              <option value="3">High</option>
             </select>
           </div>
           <div>
@@ -212,6 +240,7 @@ const AddPatient = ({ API_URL }) => {
               type="text"
               placeholder="Enter phone number"
               value={form.Phone}
+              maxLength={9}
               onChange={(e) => handleInput("Phone", e.target.value)}
             />
           </div>
@@ -221,8 +250,12 @@ const AddPatient = ({ API_URL }) => {
         <section>
           <h2>Testing Information</h2>
           <div>
-            <label>Test ID</label>
-            <input type="text" placeholder="Enter Test ID" value="1" />
+            <label>Test Date</label>
+            <input
+              type="datetime-local"
+              value={test.Date_time}
+              onChange={(e) => setTest({ ...test, Date_time: e.target.value })}
+            />
           </div>
           <div>
             <label>PCR Test Result</label>
@@ -234,7 +267,9 @@ const AddPatient = ({ API_URL }) => {
                   PCR_result: e.target.value === "Positive",
                   // Reset PCR_ct_value if PCR_result is false
                   PCR_ct_value:
-                    e.target.value === "Positive" ? prevTest.PCR_ct_value : "",
+                    e.target.value === "Positive"
+                      ? prevTest.PCR_ct_value
+                      : null,
                 }))
               }
             >
@@ -247,13 +282,16 @@ const AddPatient = ({ API_URL }) => {
             <div>
               <label>PCR Test CT Value</label>
               <input
-                type="text"
+                type="number"
                 placeholder="Enter CT Value"
                 value={test.PCR_ct_value}
+                min="0"
+                max="100.99"
+                step="0.01"
                 onChange={(e) => {
                   setTest((prevTest) => ({
                     ...prevTest,
-                    PCR_ct_value: e.target.value,
+                    PCR_ct_value: parseFloat(e.target.value),
                   }));
                 }}
               />
@@ -270,7 +308,7 @@ const AddPatient = ({ API_URL }) => {
                   QT_result: e.target.value === "Positive",
                   // Reset QT_ct_value if QT_result is false
                   QT_ct_value:
-                    e.target.value === "Positive" ? prevTest.QT_ct_value : "",
+                    e.target.value === "Positive" ? prevTest.QT_ct_value : null,
                 }))
               }
             >
@@ -283,13 +321,16 @@ const AddPatient = ({ API_URL }) => {
             <div>
               <label>QT Test CT Value</label>
               <input
-                type="text"
+                type="number"
                 placeholder="Enter CT Value"
                 value={test.QT_ct_value}
+                min="0"
+                max="100.99"
+                step="0.01"
                 onChange={(e) => {
                   setTest((prevTest) => ({
                     ...prevTest,
-                    QT_ct_value: e.target.value,
+                    QT_ct_value: parseFloat(e.target.value),
                   }));
                 }}
               />
@@ -299,21 +340,32 @@ const AddPatient = ({ API_URL }) => {
           <div>
             <label>Respiratory Rate</label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter Respiratory rate"
               value={test.Respiratory_rate}
+              min="0"
+              max="999.99"
+              step="0.01"
               onChange={(e) =>
-                setTest({ ...test, Respiratory_rate: e.target.value })
+                setTest({
+                  ...test,
+                  Respiratory_rate: parseFloat(e.target.value),
+                })
               }
             />
           </div>
           <div>
             <label>SPO2</label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter SPO2 value"
               value={test.SPO2}
-              onChange={(e) => setTest({ ...test, SPO2: e.target.value })}
+              min="0"
+              max="100.99"
+              step="0.01"
+              onChange={(e) =>
+                setTest({ ...test, SPO2: parseFloat(e.target.value) })
+              }
             />
           </div>
         </section>
@@ -424,35 +476,3 @@ const AddPatient = ({ API_URL }) => {
 };
 
 export default AddPatient;
-
-// {
-//   "Fullname": "aaa",
-//   "PID": "046204001348",
-//   "Gender": "",
-//   "Risk_level": "",
-//   "Address": "268 Lý Thường Kiệt, Quận 10, TPHCM",
-//   "Phone": "90566906",
-//   "Symptom": [
-//     {
-//       "name": "Fever or chills",
-//       "startDate": "2024-10-29T00:00:00.000Z",
-//       "seriousness": "2",
-//       "endDate": null
-//     }
-//   ],
-//   "Comorbidity": [
-//     "Weakened immune system",
-//     "Kidney disease"
-//   ],
-//   "Test": [
-//     {
-//       "Date_time": "",
-//       "PCR_result": false,
-//       "PCR_ct_value": "",
-//       "QT_result": false,
-//       "QT_ct_value": "",
-//       "Respiratory_rate": "222",
-//       "SPO2": "12"
-//     }
-//   ]
-// }
