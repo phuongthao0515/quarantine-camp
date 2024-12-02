@@ -200,7 +200,7 @@ const AddPatient = ({ API_URL }) => {
           <div>
             <label>PID</label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter patient ID"
               value={form.PID}
               maxLength={12}
@@ -244,7 +244,7 @@ const AddPatient = ({ API_URL }) => {
           <div>
             <label>Phone</label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter phone number"
               value={form.Phone}
               maxLength={9}
