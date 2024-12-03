@@ -9,6 +9,7 @@ const LoginPage = ({
   setUserName,
   setPassword,
   handleLogIn,
+  errorMessage,
 }) => {
   return (
     <div className="container">
@@ -38,7 +39,7 @@ const LoginPage = ({
           </div>
           <div className={loginStyles.login_form}>
             <h2>Login Account</h2>
-            <form>
+            <form onSubmit={handleLogIn}> {/* Handle submit on this form */}
               <div className={loginStyles.form_group}>
                 <label htmlFor="username">Username</label>
                 <input
@@ -71,17 +72,18 @@ const LoginPage = ({
                   Forgot your password?
                 </a>
               </div>
-              {/* Temp link, need to get token later */}
-              <Link to="/search">
-                <button
-                  type="submit"
-                  className={loginStyles.login_button}
-                  onClick={handleLogIn}
-                >
-                  LOG IN
-                </button>
-              </Link>
+
+              {/* Submit button inside the same form */}
+              <button
+                type="submit"
+                className={loginStyles.login_button}
+              >
+                LOG IN
+              </button>
+
+              {errorMessage && <p className={loginStyles.error_message}>{errorMessage}</p>}
             </form>
+
           </div>
         </div>
       </div>
