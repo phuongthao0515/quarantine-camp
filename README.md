@@ -1,1 +1,3 @@
-# Thay đổi cách connect với database, cần test thêm
+Thêm phần login
+Thêm table user
+code Python để add user
