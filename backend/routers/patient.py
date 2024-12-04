@@ -21,7 +21,7 @@ async def insert_patient(new_patient : patient_full_info):
         """
         # Execute the insert with the patient data
         cursor.execute(insert_patient, ( new_patient.PID, new_patient.Fullname, 
-                                        new_patient.Phone, new_patient.Gender, new_patient.Address, new_patient.Risk_level))
+                                        new_patient.Phone, new_patient.Gender.value, new_patient.Address, new_patient.Risk_level.value))
         conn.commit()
         print("Finish Insert patient")
 
@@ -36,7 +36,7 @@ async def insert_patient(new_patient : patient_full_info):
             VALUES (%s, %s, %s, %s, %s)
             """
             # Prepare data as a list of tuples
-            symptoms_data = [(new_pnum, symptom.name, symptom.startDate, symptom.endDate, symptom.seriousness)
+            symptoms_data = [(new_pnum, symptom.name, symptom.startDate, symptom.endDate, symptom.seriousness.value)
                                 for symptom in new_patient.Symptom]
             cursor.executemany(insert_symptoms, symptoms_data)
         conn.commit()
@@ -47,7 +47,7 @@ async def insert_patient(new_patient : patient_full_info):
             VALUES (%s, %s)
             """
             # Prepare data as a list of tuples
-            comorbidity_data = [(new_pnum, comor) for comor in new_patient.Comorbidity]
+            comorbidity_data = [(new_pnum, comor.value) for comor in new_patient.Comorbidity]
             cursor.executemany(insert_comorbidity, comorbidity_data)
         conn.commit()
         print("Finish Insert Como")
