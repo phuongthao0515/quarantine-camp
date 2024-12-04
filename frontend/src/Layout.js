@@ -6,9 +6,26 @@ import { useNavigate } from "react-router-dom";
 
 const Layout = () => {
   const nav = useNavigate();
-  const handleLogOut = () => {
-    localStorage.removeItem("token");
-    nav("/login");
+  const handleLogOut = async () => {
+    try {
+      // Call the backend /logout endpoint
+      const response = await fetch(`http://127.0.0.1:8000/logout`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to log out. Please try again.");
+      }
+
+      nav("/login");
+    } catch (error) {
+      console.error("Error during logout:", error);
+      alert("Not connected. Please log in first");
+      nav("/login");
+    }
   };
   return (
     <div>

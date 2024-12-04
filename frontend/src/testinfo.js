@@ -54,10 +54,10 @@ const PatientTestingInfo = ({ test, setTest, API_URL }) => {
                     <tr key={index}>
                       <td>{each.PNUMBER}</td>
                       <td>{each.TEST_ID}</td>
-                      <td>{each.Qt_result}</td>
+                      <td>{each.QT_result ? "Positive" : "Negative"}</td>
                       <td>{each.QT_ct_value}</td>
                       <td>{each.RESPIRATORY_RATE}</td>
-                      <td>{each.PCR_result}</td>
+                      <td>{each.PCR_result ? "Positive" : "Negative"}</td>
                       <td>{each.PCR_ct_value}</td>
                       <td>{each.SPO2}%</td>
                     </tr>

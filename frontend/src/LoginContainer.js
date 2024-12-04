@@ -9,34 +9,35 @@ const LoginContainer = () => {
   const navigate = useNavigate();
 
   const handleLogIn = async (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    setErrorMessage(""); // Clear any existing error messages
+    e.preventDefault();
+    setErrorMessage("");
 
     try {
-      const response = await fetch("http://localhost:8000/patient/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username: userName, password: password }),
-      });
+      const response = await fetch(
+        `http://localhost:8000/login?username=${userName}&password=${password}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
 
       if (!response.ok) {
-        // Handle error: response not OK (status 4xx or 5xx)
         const errorData = await response.json();
         const errorMsg = errorData.detail || "Login failed. Please try again.";
-        setErrorMessage(errorMsg); // Display the error message
+        setErrorMessage(errorMsg);
         console.error("Login failed:", errorMsg);
       } else {
-        // Login was successful
         const data = await response.json();
         console.log("Login successful:", data);
-
-        // Navigate to the next page (e.g., dashboard)
-        navigate("/search"); // Adjust the path as needed
+        navigate("/search");
+        window.location.reload();
       }
     } catch (error) {
       // Handle fetch or network errors
       console.error("Error:", error);
-      setErrorMessage("An error occurred while trying to log in. Please try again.");
+      setErrorMessage(
+        "An error occurred while trying to log in. Please try again."
+      );
     }
   };
 

@@ -11,7 +11,7 @@ db_config = {
     "host": "localhost",
     "user": "Manager",
     "password": "Manager123",
-    "database": "dbassignment",
+    "database": "login",
 }
 
 

@@ -14,10 +14,6 @@ import Layout from "./Layout";
 function App() {
   const API_URL = "http://127.0.0.1:8000";
 
-  const [username, setUserName] = useState("");
-
-  const [password, setPassword] = useState("");
-
   const [patients, setPatients] = useState([]);
 
   const [searchReal, setSearch] = useState("");
@@ -49,25 +45,10 @@ function App() {
     fetchPatients();
   }, [searchReal]);
 
-  const handleLogIn = () => {};
-
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={<LoginContainer  />} />
-      {/* <Route
-        path="/login"
-        element={
-          <Login
-            userName={username}
-            password={password}
-            setUserName={setUserName}
-            setPassword={setPassword}
-            handleLogIn={handleLogIn}
-            API_URL={API_URL}
-          />
-        }
-      /> */}
+      <Route path="/login" element={<LoginContainer />} />
 
       <Route element={<Layout />}>
         <Route

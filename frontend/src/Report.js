@@ -22,8 +22,8 @@ const PatientReport = ({ test, setTest, API_URL, Comorbidity, setcom }) => {
         setcom(data.comorbidities);
         setSymptoms(data.symptoms);
         setTest(data.test_results);
-        setPatient(data.patient_info[0]);
-        setTreatment(data.treatment_records[0].TREATMENT);
+        setPatient(data.patient_info);
+        setTreatment(data.treatment_records?.TREATMENTS || []);
       } catch (error) {
         console.error("Error fetching Report:", error);
       }
@@ -103,10 +103,10 @@ const PatientReport = ({ test, setTest, API_URL, Comorbidity, setcom }) => {
                   <tr key={index}>
                     <td>{each.TEST_ID}</td>
                     <td>{each.PNUMBER}</td>
-                    <td>{each.Qt_result}</td>
+                    <td>{each.QT_result ? "Positive" : "Negative"}</td>
                     <td>{each.QT_ct_value}</td>
                     <td>{each.RESPIRATORY_RATE}</td>
-                    <td>{each.PCR_result}</td>
+                    <td>{each.PCR_result ? "Positive" : "Negative"}</td>
                     <td>{each.PCR_ct_value}</td>
                     <td>{each.SPO2}%</td>
                   </tr>
