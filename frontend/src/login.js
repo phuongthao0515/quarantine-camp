@@ -39,7 +39,9 @@ const LoginPage = ({
           </div>
           <div className={loginStyles.login_form}>
             <h2>Login Account</h2>
-            <form onSubmit={handleLogIn}> {/* Handle submit on this form */}
+            <form onSubmit={handleLogIn}>
+              {" "}
+              {/* Handle submit on this form */}
               <div className={loginStyles.form_group}>
                 <label htmlFor="username">Username</label>
                 <input
@@ -48,6 +50,7 @@ const LoginPage = ({
                   placeholder="Enter your username"
                   value={userName}
                   onChange={(e) => setUserName(e.target.value)}
+                  required
                 />
               </div>
               <div className={loginStyles.form_group}>
@@ -58,6 +61,7 @@ const LoginPage = ({
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  required
                 />
               </div>
               <div className={loginStyles.form_options}>
@@ -72,18 +76,14 @@ const LoginPage = ({
                   Forgot your password?
                 </a>
               </div>
-
               {/* Submit button inside the same form */}
-              <button
-                type="submit"
-                className={loginStyles.login_button}
-              >
+              <button type="submit" className={loginStyles.login_button}>
                 LOG IN
               </button>
-
-              {errorMessage && <p className={loginStyles.error_message}>{errorMessage}</p>}
+              {errorMessage && (
+                <p className={loginStyles.error}>{errorMessage}</p>
+              )}
             </form>
-
           </div>
         </div>
       </div>

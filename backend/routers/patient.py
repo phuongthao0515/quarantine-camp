@@ -2,14 +2,45 @@ from fastapi import APIRouter, HTTPException
 from database import conn
 from typing import List
 from collections import defaultdict
-from model import patient, Test_Result, patient_full_info, patient_has_symptom, patient_has_comorbidity, treatment
+from model import patient, Test_Result, patient_full_info, patient_has_symptom, patient_has_comorbidity, treatment, login_info
 from itertools import zip_longest
+import bcrypt
 
 # Create a router instance
 router = APIRouter(prefix="/patient", tags=["patient"])
 
 # Insert an patient
 # "symptom" : [ {}, {}, {} ]
+@router.post("/login")
+async def authorize_login( login_request : login_info):
+    username = login_request.username
+    password = login_request.password
+
+    try:
+        cursor = conn.cursor(dictionary=True)
+
+        # Query to get the user by username
+        query = "SELECT Password FROM USERNAME WHERE Username = %s"
+        cursor.execute(query, (username,))
+        user = cursor.fetchone()
+
+        if not user:
+            raise HTTPException(status_code=401, detail="Invalid username or password")
+
+        # Get the stored hashed password
+        stored_hashed_password = user["Password"]
+
+        # Verify the password
+        if not bcrypt.checkpw(password.encode("utf-8"), stored_hashed_password.encode("utf-8")):
+            raise HTTPException(status_code=401, detail="Invalid username or password")
+
+        return {"message": "Login successful!"}
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    finally:
+        cursor.close()
+
 @router.post("/insert")
 async def insert_patient(new_patient : patient_full_info):
     try:
