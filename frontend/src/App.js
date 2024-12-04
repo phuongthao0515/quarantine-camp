@@ -1,5 +1,6 @@
 import Home from "./home";
 import Login from "./login";
+import LoginContainer from "./LoginContainer";
 import Search from "./search_page";
 import AddNewPatient from "./addpatient";
 import TestInfo from "./testinfo";
@@ -53,7 +54,8 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route
+      <Route path="/login" element={<LoginContainer  />} />
+      {/* <Route
         path="/login"
         element={
           <Login
@@ -65,7 +67,7 @@ function App() {
             API_URL={API_URL}
           />
         }
-      />
+      /> */}
 
       <Route element={<Layout />}>
         <Route
