@@ -61,8 +61,9 @@ const AddPatient = ({ API_URL }) => {
 
       if (!response.ok) {
         const error = await response.json();
+        console.log(error);
         throw new Error(
-          error.message || "Cannot add patient! Please try again."
+          error.detail || "Cannot add patient! Please try again."
         );
       }
 
@@ -93,7 +94,7 @@ const AddPatient = ({ API_URL }) => {
       });
       window.location.reload();
     } catch (err) {
-      alert(`Error: ${err.message}`);
+      alert(`Access Denied!`);
     }
   };
 

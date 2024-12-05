@@ -10,6 +10,7 @@ from model import (
     treatment,
 )
 from connection_manager import ConnectionManager
+from mysql.connector import Error
 
 # Create a router instance
 router = APIRouter(prefix="/patient", tags=["patient"])

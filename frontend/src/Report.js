@@ -16,14 +16,20 @@ const PatientReport = ({ test, setTest, API_URL, Comorbidity, setcom }) => {
       try {
         const response = await fetch(`${API_URL}/patient/report/${Id}`);
         if (!response.ok) {
+          alert("Access Denied.");
           throw new Error("Failed to Report information");
+         
         }
-        const data = await response.json();
-        setcom(data.comorbidities);
-        setSymptoms(data.symptoms);
-        setTest(data.test_results);
-        setPatient(data.patient_info);
-        setTreatment(data.treatment_records?.TREATMENTS || []);
+        else{
+          const data = await response.json();
+          setcom(data.comorbidities);
+          setSymptoms(data.symptoms);
+          setTest(data.test_results);
+          setPatient(data.patient_info);
+          setTreatment(data.treatment_records?.TREATMENTS || []);
+
+        }
+        
       } catch (error) {
         console.error("Error fetching Report:", error);
       }

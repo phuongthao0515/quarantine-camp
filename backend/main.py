@@ -4,7 +4,7 @@ from routers import employee,patient
 from connection_manager import ConnectionManager
 import mysql.connector
 import bcrypt
-from database import login_db_config, app_db_config
+from database import login_db_config, Manager_config, Doctor_config, Admit_config
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -34,7 +34,7 @@ async def login(username: str, password: str):
         cursor = login_connection.cursor()
 
         # Query for hashed password
-        query = "SELECT Password FROM USERNAME WHERE Username = %s"
+        query = "SELECT Passwords, Authorities FROM USERNAME WHERE Username = %s"
         cursor.execute(query, (username,))
         result = cursor.fetchone()
 
@@ -43,13 +43,20 @@ async def login(username: str, password: str):
             if bcrypt.checkpw(password.encode("utf-8"), hashed_password.encode("utf-8")):
                 # Close login connection
                 cursor.close()
-                login_connection.close()
-
+                login_connection.close()    
+                if ( result[1] == 'Manager'):
+                    app_connection = mysql.connector.connect(**Manager_config)
+                elif (result[1] == 'doctor1'):
+                    app_connection = mysql.connector.connect(**Doctor_config)
+                elif (result[1] == 'admit1'):
+                    app_connection = mysql.connector.connect(**Admit_config)
+                else:
+                    raise HTTPException(status_code=500, detail = "Account error: Role not exist.")
                 # Establish app database connection
-                app_connection = mysql.connector.connect(**app_db_config)
+                
                 if app_connection.is_connected():
                     ConnectionManager.get_instance().set_connection(app_connection)
-                    return {"message": "Login successful. Connected to app database."}
+                    return {"message": f" Login successful. Connected to app database as {result[1]}."}
                 else:
                     raise HTTPException(status_code=500, detail="Failed to connect to app database")
 

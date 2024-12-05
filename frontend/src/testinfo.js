@@ -11,6 +11,7 @@ const PatientTestingInfo = ({ test, setTest, API_URL }) => {
       try {
         const response = await fetch(`${API_URL}/patient/test/${Id}`);
         if (!response.ok) {
+          alert("Access Denied.")
           throw new Error("Failed to fetch test information");
         }
         const data = await response.json();

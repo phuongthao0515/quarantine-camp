@@ -12,6 +12,7 @@ const Commobidity = ({ API_URL, Comorbidity, setcom }) => {
       try {
         const response = await fetch(`${API_URL}/patient/comorbidity/${Id}`);
         if (!response.ok) {
+          alert("Access Denied.")
           throw new Error("Failed to fetch Comorbidity");
         }
         const data = await response.json();
