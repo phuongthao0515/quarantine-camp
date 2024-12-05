@@ -31,24 +31,28 @@ async def get_all_employees():
             cursor.close()
 
 
-# @router.get("/{employee_id}", response_model=employee)
-# async def get_employee_by_id(employee_id: str):
-#     try:
-#         cursor = conn.cursor(dictionary=True)
+@router.get("/{employee_id}", response_model=employee)
+async def get_employee_by_id(employee_id: str):
+    connection = ConnectionManager.get_instance().get_connection()
+    if not connection:
+        raise HTTPException(status_code=500, detail="Database connection not established")
 
-#         # Fetch employee by ID
-#         query = "SELECT * FROM employee WHERE ID = %s"
-#         cursor.execute(query, (employee_id,))
-#         employee = cursor.fetchone()
+    try:
+        cursor = connection.cursor(dictionary=True)
 
-#         if not employee:
-#             raise HTTPException(status_code=404, detail="Employee not found")
+        # Fetch employee by ID
+        query = "SELECT * FROM employee WHERE ID = %s"
+        cursor.execute(query, (employee_id,))
+        employee = cursor.fetchone()
 
-#         return employee
+        if not employee:
+            raise HTTPException(status_code=404, detail="Employee not found")
 
-#     except Exception as e:
-#         raise HTTPException(status_code=500, detail=str(e))
+        return employee
 
-#     finally:
-#         cursor.close()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+    finally:
+        cursor.close()
 #         # conn.close()

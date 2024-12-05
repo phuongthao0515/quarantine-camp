@@ -33,10 +33,10 @@ def insert_user(employee_id, username, password):
         
         # SQL Insert Query
         query = """
-        INSERT INTO USERNAME (EmployeeID, Username, Password)
-        VALUES (%s, %s, %s)
+        INSERT INTO USERNAME ( Username, Password )
+        VALUES ( %s, %s)
         """
-        data = (employee_id, username, hashed_password)
+        data = ( username, hashed_password)
         
         # Execute and commit
         cursor.execute(query, data)

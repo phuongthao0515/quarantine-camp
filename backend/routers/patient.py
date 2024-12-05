@@ -8,10 +8,9 @@ from model import (
     patient_has_symptom,
     patient_has_comorbidity,
     treatment,
-    login_info,
 )
 from connection_manager import ConnectionManager
-import bcrypt
+
 # Create a router instance
 router = APIRouter(prefix="/patient", tags=["patient"])
 
@@ -23,7 +22,6 @@ router = APIRouter(prefix="/patient", tags=["patient"])
 @router.post("/insert")
 async def insert_patient(new_patient: patient_full_info):
     connection = ConnectionManager.get_instance().get_connection()
-
     if not connection:
         raise HTTPException(status_code=500, detail="Database connection not established")
 
@@ -107,7 +105,6 @@ async def insert_patient(new_patient: patient_full_info):
 @router.get("/all-patients", response_model=List[patient])
 async def get_all_patients():
     connection = ConnectionManager.get_instance().get_connection()
-
     if not connection:
         raise HTTPException(status_code=500, detail="Database connection not established")
 
@@ -129,7 +126,6 @@ async def get_all_patients():
 @router.get("/search/name/{name}", response_model=List[patient])
 async def get_patient_by_name(name: str):
     connection = ConnectionManager.get_instance().get_connection()
-
     if not connection:
         raise HTTPException(status_code=500, detail="Database connection not established")
 
