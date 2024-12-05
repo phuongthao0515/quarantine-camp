@@ -22,7 +22,7 @@ def hash_password(password):
     return hashed.decode('utf-8')  # Convert bytes to string for storage
 
 # Insert data into the USERNAME table
-def insert_user(employee_id, username, password):
+def insert_user( username, password, role):
     try:
         # Connect to the database
         connection = mysql.connector.connect(**db_config)
@@ -33,10 +33,10 @@ def insert_user(employee_id, username, password):
         
         # SQL Insert Query
         query = """
-        INSERT INTO USERNAME ( Username, Password )
-        VALUES ( %s, %s)
+        INSERT INTO USERNAME ( Username, Passwords, Authorities )
+        VALUES ( %s, %s, %s)
         """
-        data = ( username, hashed_password)
+        data = ( username, hashed_password, role)
         
         # Execute and commit
         cursor.execute(query, data)
@@ -53,9 +53,9 @@ def insert_user(employee_id, username, password):
             connection.close()
 
 
-insert_user('0031', 'tarominhhieu', 'Hieu@742004')
-insert_user('0032', 'PhuongThao', '123456')
-insert_user('0033', 'AnhQuang', '123456')
-insert_user('0033', 'ThuyTien', '123456')
-insert_user('0033', 'NgocVan', '123456')
-insert_user('0005', 'TrongNhan', '654321')
+insert_user('tarominhhieu', 'Hieu@742004', 'admit1')
+insert_user( 'PhuongThao', '123456', 'doctor1')
+insert_user( 'AnhQuang', '123456', 'admit1')
+insert_user('ThuyTien', '123456', 'doctor1')
+insert_user( 'NgocVan', '123456', 'admit1')
+insert_user('TrongNhan', '654321', 'Manager')
