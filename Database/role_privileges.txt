@@ -1,0 +1,112 @@
+#I/ User: admitter1 (also discharger)
+
+create user 'admitter1'@'localhost'
+IDENTIFIED BY 'admitter1';
+
+
+DROP VIEW IF EXISTS admitter_patient_details;
+DROP VIEW IF EXISTS admitter_available_rooms;
+DROP VIEW IF EXISTS admitter_assigned_records;
+
+
+CREATE VIEW admitter_patient_details AS
+SELECT P.PNUMBER, P.PID, P.FULLNAME, P.PHONE, P.ADDRESS, P.GENDER, P.RISK_LEVEL, A.ADMIT_DATE     
+FROM patient P 
+JOIN admit_date A ON P.PNUMBER = A.PNUM;
+
+CREATE VIEW admitter_available_rooms AS
+SELECT R.ROOM_ID, R.BUILDING_ID, R.CAPACITY, R.NUMPATIENT
+FROM room R
+WHERE R.NUMPATIENT < R.CAPACITY;
+
+CREATE VIEW admitter_assigned_records AS
+SELECT I.PNUM, P.FULLNAME, I.ROOM_ID, I.BUILDING_ID, I.ASSIGN_DATE, I.ASSIGN_TIME 
+FROM is_assigned_to I
+JOIN patient P ON I.PNUM = P.PNUMBER;
+
+
+
+REVOKE ALL PRIVILEGES ON *.* FROM 'admitter1'@'localhost';
+
+-- query on view --
+GRANT SELECT ON admitter_patient_details TO 'admitter1'@'localhost';
+GRANT SELECT ON admitter_available_rooms TO 'admitter1'@'localhost';
+GRANT SELECT ON admitter_assigned_records TO 'admitter1'@'localhost';
+
+-- update --
+GRANT SELECT, UPDATE ON test_result TO 'admitter1'@'localhost';
+GRANT SELECT, UPDATE ON room TO 'admitter1'@'localhost';
+GRANT SELECT, UPDATE ON building TO 'admitter1'@'localhost';
+GRANT SELECT, UPDATE ON symptoms TO 'admitter1'@'localhost';
+
+-- insert --
+GRANT INSERT ON test_result TO 'admitter1'@'localhost';
+GRANT INSERT ON is_assigned_to TO 'admitter1'@'localhost';
+GRANT INSERT ON symptoms TO 'admitter1'@'localhost';
+
+-- read --
+GRANT SELECT ON employee TO 'admitter1'@'localhost';
+GRANT SELECT ON comorbidity TO 'admitter1'@'localhost';
+
+
+
+-- insert + read --
+GRANT SELECT, INSERT ON discharge_date TO 'admitter1'@'localhost';
+GRANT SELECT, INSERT ON admit_date TO 'admitter1'@'localhost';
+GRANT SELECT, INSERT ON patient TO 'admitter1'@'localhost';  -- can't update patient in4
+GRANT SELECT, INSERT ON patient_has_comorbidity TO 'admitter1'@'localhost';
+
+-- Delete ---
+GRANT DELETE ON admit_date TO 'admitter1'@'localhost';
+GRANT DELETE ON is_assigned_to TO 'admitter1'@'localhost';
+GRANT DELETE ON discharge_date TO 'admitter1'@'localhost';
+GRANT DELETE ON symptoms TO 'admitter1'@'localhost';
+
+SHOW GRANTS FOR 'admitter1'@'localhost';
+
+
+#II/ Doctor1:
+
+create user 'doctor1'@'localhost'
+IDENTIFIED BY 'doctor1';
+
+
+
+REVOKE ALL PRIVILEGES ON *.* FROM 'doctor1'@'localhost';
+
+-- update --
+GRANT SELECT, UPDATE ON patient_has_comorbidity TO 'doctor1'@'localhost';
+GRANT SELECT, UPDATE ON has_medicine TO 'doctor1'@'localhost';
+GRANT SELECT, UPDATE ON patient TO 'doctor1'@'localhost';
+GRANT SELECT, UPDATE ON symptoms TO 'doctor1'@'localhost';
+GRANT SELECT, UPDATE ON treatment_record TO 'doctor1'@'localhost';
+
+GRANT SELECT, UPDATE ON make_treatrecord TO 'doctor1'@'localhost';
+
+
+-- insert --
+GRANT INSERT ON patient_has_comorbidity TO 'doctor1'@'localhost';
+GRANT INSERT ON has_medicine TO 'doctor1'@'localhost';
+GRANT INSERT ON symptoms TO 'doctor1'@'localhost';
+GRANT INSERT ON treatment_record TO 'doctor1'@'localhost';
+GRANT INSERT ON make_treatrecord TO 'doctor1'@'localhost';
+
+
+-- read --
+GRANT SELECT ON room TO 'doctor1'@'localhost';
+GRANT SELECT ON building TO 'doctor1'@'localhost';
+GRANT SELECT ON test_result TO 'doctor1'@'localhost';
+GRANT SELECT ON is_assigned_to TO 'doctor1'@'localhost';
+GRANT SELECT ON medicine TO 'doctor1'@'localhost';
+
+-- insert + read --
+GRANT SELECT, INSERT ON comorbidity TO 'doctor1'@'localhost';
+
+
+-- Delete ---
+GRANT DELETE ON patient_has_comorbidity TO 'doctor1'@'localhost';
+GRANT DELETE ON has_medicine TO 'doctor1'@'localhost';
+GRANT DELETE ON symptoms TO 'doctor1'@'localhost';
+
+
+SHOW GRANTS FOR 'doctor1'@'localhost';
